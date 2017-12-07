@@ -40,11 +40,11 @@ class Data:
             with open("albums.db") as f:
                 pass
         except OSError:
-            self.db_connection = sqlite3.connect('albums.db')
-            c = self.db_connection.cursor()
-            c.execute("""CREATE TABLE albums (id, title, authors, year, is_lend, to_who)""")
-            self.db_connection.commit()
-            self.db_connection.close()
+            self.setup_table()
+
+    @setup_connection
+    def setup_table(self, c):
+        c.execute("""CREATE TABLE albums (id, title, authors, year, is_lend, to_who)""")
 
     @setup_connection
     def insert_one(self, c, album):
@@ -54,21 +54,22 @@ class Data:
     def remove_one(self, c, album):
         c.execute("""DELETE FROM albums WHERE id=? AND title=? AND authors=? AND year=?""", (album.id, album.title,
                                                                                                       album.authors, album.year))
-    @setup_connection                                                                                                  
+    @setup_connection
     def find_all(self, c, query):
-        c.execute("""SELECT * FROM albums WHERE id LIKE '%?%' OR title LIKE '%?%' OR authors LIKE '%?%'
-                     OR year LIKE '%?%' OR is_lend LIKE '%?%' OR to_who LIKE '%?%';""", tuple([query]*6))
-        return c.fetchall()
+        c.execute("""SELECT * FROM albums WHERE id LIKE '%{}%' OR title LIKE '%{}%' OR authors LIKE '%{}%'
+                     OR year LIKE '%{}%' OR is_lend LIKE '%{}%' OR to_who LIKE '%{}%'""".format( *([query]*6)))
+        self.results = c.fetchall()
 
 class DatabaseBrowser:
-    def __init__(self):
-        pass
+    def __init__(self, data):
+        self.data = data
 
+    @staticmethod
     def _input_handler(search_entry, new_key):
         if new_key == 65288:
             return search_entry[:-1]
         return search_entry + chr(new_key) if new_key <= 128 else search_entry
 
-    def do_search(search_entry, new_key):
-        return Data.find_all()
-        pass
+    def do_search(self, search_entry, new_key):
+        self.data.find_all(self._input_handler(search_entry, new_key))
+        return self.data.results
