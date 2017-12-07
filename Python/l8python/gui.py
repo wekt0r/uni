@@ -30,13 +30,14 @@ class GUI(Gtk.Window):
         self.search_entry = Gtk.Entry()
         self.box.pack_start(self.search_entry, True, True, 0)
 
-        self.search_result = Gtk.Label("\n"*NO_OF_RESULTS)
-        self.box.pack_start(self.search_result, True, True, 0)
-
         self.edit_button = Gtk.Button("Edit them!")
         self.edit_button.connect_after('clicked', self.on_edit_clicked)
         self.box.pack_start(self.edit_button, True, True, 0)
 
+        self.search_result = Gtk.Table(rows=NO_OF_RESULTS, columns=6, homogeneous=True)
+        self._create_table_row(self.search_result,0, "Id", "Title", "Authors", "Year", "Is lend?", "To who?")
+        #self.search_result = Gtk.Label("\n"*NO_OF_RESULTS)
+        self.box.pack_start(self.search_result, True, True, 0)
 
         self.show_all()
 
@@ -45,8 +46,12 @@ class GUI(Gtk.Window):
         Gtk.main_quit()
 
     def on_key_event(self, widget, event):
-        results = [1,1,1,1,1,1]
-        self.search_result.set_label("\n\n".join([ "\t| ".join([str(e) for e in list(r)]) for r in self.database_browser.do_search(self.search_entry.get_text(), event.keyval)[:NO_OF_RESULTS]]))
+        self.box.remove(self.search_result)
+        self.search_result = Gtk.Table(rows=NO_OF_RESULTS, columns=6, homogeneous=True)
+        self._create_table_row(self.search_result,0, "Id", "Title", "Authors", "Year", "Is lend?", "To who?")
+        for row, res in enumerate(self.database_browser.do_search(self.search_entry.get_text(), event.keyval)[:NO_OF_RESULTS]):
+            self._create_table_row(self.search_result, row+1, *res)
+        self.box.pack_start(self.search_result, True, True, 0)
         self.show_all()
 
     def on_add_clicked(self, _):
@@ -55,13 +60,32 @@ class GUI(Gtk.Window):
     def on_edit_clicked(self, _):
         EditSearchResults(self.data)
 
+    def _create_table_row(self, table, row, id, title, authors, year, is_lend, to_who):
+        table.attach(Gtk.Label(str(id)),
+                     0,1,
+                     row,row+1)
+        table.attach(Gtk.Label(str(title)),
+                     1,2,
+                     row,row+1)
+        table.attach(Gtk.Label(str(authors)),
+                     2,3,
+                     row,row+1)
+        table.attach(Gtk.Label(str(year)),
+                     3,4,
+                     row,row+1)
+        table.attach(Gtk.Label(str(is_lend)),
+                     4,5,
+                     row,row+1)
+        table.attach(Gtk.Label(str(to_who)),
+                     5,6,
+                     row,row+1)
+        return table
 
 class AddAlbum(Gtk.Window):
     def __init__(self,data):
         self.data = data
         Gtk.Window.__init__(self, title="Add Album")
         self.set_size_request(400, 200)
-        self.connect_after('destroy', self.destroy)
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(self.box)
@@ -73,10 +97,6 @@ class AddAlbum(Gtk.Window):
             self.box.pack_start(label, True, True, 0)
             self.box.pack_start(entry, True, True, 0)
 
-        self.discard = Gtk.Button("Discard")
-        self.discard.connect_after('clicked', self.destroy)
-        self.box.pack_start(self.discard, True, True, 0)
-
         self.add = Gtk.Button("Add")
         self.add.connect_after('clicked', self.add_album)
         self.box.pack_start(self.add, True, True, 0)
@@ -85,16 +105,12 @@ class AddAlbum(Gtk.Window):
     def add_album(self, _):
         self.data.insert_one(Album(*[entry.get_text() for entry in self.entries]))
 
-    def destroy(window, self):
-        Gtk.main_quit()
-
 class UpdateAlbum(Gtk.Window):
     def __init__(self, data, album):
         self.data = data
         self.album = album
         Gtk.Window.__init__(self, title="Update Album")
         self.set_size_request(400, 200)
-        self.connect_after('destroy', self.destroy)
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(self.box)
@@ -104,12 +120,8 @@ class UpdateAlbum(Gtk.Window):
 
         for label, entry, value in zip(self.labels, self.entries, [album.id, album.title, album.authors, album.year, album.is_lend, album.to_who]):
             self.box.pack_start(label, True, True, 0)
-            entry.set_text(value)
+            entry.set_text(str(value))
             self.box.pack_start(entry, True, True, 0)
-
-        self.discard = Gtk.Button("Discard")
-        self.discard.connect_after('clicked', self.destroy)
-        self.box.pack_start(self.discard, True, True, 0)
 
         self.add = Gtk.Button("Remove")
         self.add.connect_after('clicked', self.remove_album)
@@ -127,15 +139,11 @@ class UpdateAlbum(Gtk.Window):
         self.data.remove_one(self.album)
         self.data.insert_one(Album(*[entry.get_text() for entry in self.entries]))
 
-    def destroy(window, self):
-        Gtk.main_quit()
-
 class EditSearchResults(Gtk.Window):
     def __init__(self, data):
         self.data = data
         Gtk.Window.__init__(self, title="Edit Search Results")
         self.set_size_request(400, 200)
-        self.connect_after('destroy', self.destroy)
 
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(self.box)
