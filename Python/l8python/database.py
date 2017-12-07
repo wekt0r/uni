@@ -9,14 +9,6 @@ class Album:
         self.is_lend = is_lend
         self.to_who = to_who
 
-    def lend_to(self, to_who):
-        self.is_lend = True
-        self.to_who = to_who
-
-    def get_back(self):
-        self.is_lend = False
-        self.to_who = None
-
 def setup_connection(func):
     def setup_decorator(self, *args, **kwargs):
         db_conn, c = self._make_conn()
