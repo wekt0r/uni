@@ -2,6 +2,7 @@ import gi, os
 from gi.repository import Gtk
 
 from database import *
+from functools import partial
 
 NO_OF_RESULTS = 10
 
@@ -52,15 +53,13 @@ class GUI(Gtk.Window):
         AddAlbum(self.data)
 
     def on_edit_clicked(self, _):
-        pass
+        EditSearchResults(self.data)
 
-    def on_clicked_event(self, *args):
-        pass
 
 class AddAlbum(Gtk.Window):
     def __init__(self,data):
         self.data = data
-        Gtk.Window.__init__(self, title="Album Manager")
+        Gtk.Window.__init__(self, title="Add Album")
         self.set_size_request(400, 200)
         self.connect_after('destroy', self.destroy)
 
@@ -89,13 +88,68 @@ class AddAlbum(Gtk.Window):
     def destroy(window, self):
         Gtk.main_quit()
 
-class SearchResults(Gtk.Window):
-    def __init__(self, ):
-        Gtk.Window.__init__(self, title="Edit search results")
+class UpdateAlbum(Gtk.Window):
+    def __init__(self, data, album):
+        self.data = data
+        self.album = album
+        Gtk.Window.__init__(self, title="Update Album")
+        self.set_size_request(400, 200)
+        self.connect_after('destroy', self.destroy)
 
+        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(self.box)
 
-class AlbumEditor(Gtk.Window):
-    pass
+        self.labels = [Gtk.Label(label) for label in ["id", "Title", "Authors", "Year", "Is lend?", "To who"]]
+        self.entries = [Gtk.Entry() for _ in [album.id, album.title, album.authors, album.year, album.is_lend, album.to_who]]
+
+        for label, entry, value in zip(self.labels, self.entries, [album.id, album.title, album.authors, album.year, album.is_lend, album.to_who]):
+            self.box.pack_start(label, True, True, 0)
+            entry.set_text(value)
+            self.box.pack_start(entry, True, True, 0)
+
+        self.discard = Gtk.Button("Discard")
+        self.discard.connect_after('clicked', self.destroy)
+        self.box.pack_start(self.discard, True, True, 0)
+
+        self.add = Gtk.Button("Remove")
+        self.add.connect_after('clicked', self.remove_album)
+        self.box.pack_start(self.add, True, True, 0)
+
+        self.add = Gtk.Button("Update")
+        self.add.connect_after('clicked', self.update_album)
+        self.box.pack_start(self.add, True, True, 0)
+        self.show_all()
+
+    def remove_album(self, _):
+        self.data.remove_one(self.album)
+
+    def update_album(self, _):
+        self.data.remove_one(self.album)
+        self.data.insert_one(Album(*[entry.get_text() for entry in self.entries]))
+
+    def destroy(window, self):
+        Gtk.main_quit()
+
+class EditSearchResults(Gtk.Window):
+    def __init__(self, data):
+        self.data = data
+        Gtk.Window.__init__(self, title="Edit Search Results")
+        self.set_size_request(400, 200)
+        self.connect_after('destroy', self.destroy)
+
+        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(self.box)
+        self.buttons = []
+
+        for album_tuple in self.data.results:
+            self.buttons.append(Gtk.Button("\t| ".join([str(e) for e in album_tuple])))
+            update_album = partial(self.update_album, Album(*album_tuple))
+            self.buttons[-1].connect_after('clicked', update_album)
+            self.box.pack_start(self.buttons[-1], True, True, 0)
+
+        self.show_all()
+    def update_album(self, album, _):
+        UpdateAlbum(self.data, album)
 
 class App:
     def main():
