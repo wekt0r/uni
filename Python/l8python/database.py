@@ -28,10 +28,12 @@ class Data:
     def __init__(self):
         try:
             with open("albums.db") as f:
-                self.conn = sqlite3.connect("albums.db")
+                pass
         except OSError:
-            self.conn = sqlite3.connect("albums.db")
             self.setup_table()
+        finally:
+            self.conn = sqlite3.connect("albums.db")
+
 
     @setup_connection
     def setup_table(self, c):
