@@ -35,7 +35,7 @@ class GUI(Gtk.Window):
         self.box.pack_start(self.edit_button, True, True, 0)
 
         self.search_result = Gtk.Table(rows=NO_OF_RESULTS, columns=6, homogeneous=True)
-        self._create_table_row(self.search_result,0, "Id", "Title", "Authors", "Year", "Is lend?", "To who?")
+        self._create_table_row(self.search_result,0, "Id", "Title", "Authors", "Year", "Is lent?", "To who?")
         #self.search_result = Gtk.Label("\n"*NO_OF_RESULTS)
         self.box.pack_start(self.search_result, True, True, 0)
 
@@ -48,7 +48,7 @@ class GUI(Gtk.Window):
     def on_key_event(self, widget, event):
         self.box.remove(self.search_result)
         self.search_result = Gtk.Table(rows=NO_OF_RESULTS, columns=6, homogeneous=True)
-        self._create_table_row(self.search_result,0, "Id", "Title", "Authors", "Year", "Is lend?", "To who?")
+        self._create_table_row(self.search_result,0, "Id", "Title", "Authors", "Year", "Is lent?", "To who?")
         for row, res in enumerate(self.database_browser.do_search(self.search_entry.get_text(), event.keyval)[:NO_OF_RESULTS]):
             self._create_table_row(self.search_result, row+1, *res)
         self.box.pack_start(self.search_result, True, True, 0)
@@ -60,7 +60,7 @@ class GUI(Gtk.Window):
     def on_edit_clicked(self, _):
         EditSearchResults(self.data)
 
-    def _create_table_row(self, table, row, id, title, authors, year, is_lend, to_who):
+    def _create_table_row(self, table, row, id, title, authors, year, is_lent, to_who):
         table.attach(Gtk.Label(str(id)),
                      0,1,
                      row,row+1)
@@ -73,7 +73,7 @@ class GUI(Gtk.Window):
         table.attach(Gtk.Label(str(year)),
                      3,4,
                      row,row+1)
-        table.attach(Gtk.Label(str(is_lend)),
+        table.attach(Gtk.Label(str(is_lent)),
                      4,5,
                      row,row+1)
         table.attach(Gtk.Label(str(to_who)),
@@ -90,7 +90,7 @@ class AddAlbum(Gtk.Window):
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(self.box)
 
-        self.labels = [Gtk.Label(label) for label in ["id", "Title", "Authors", "Year", "Is lend?", "To who"]]
+        self.labels = [Gtk.Label(label) for label in ["id", "Title", "Authors", "Year", "Is lent?", "To who"]]
         self.entries = [Gtk.Entry() for _ in range(6)]
 
         for label, entry in zip(self.labels, self.entries):
@@ -115,10 +115,10 @@ class UpdateAlbum(Gtk.Window):
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(self.box)
 
-        self.labels = [Gtk.Label(label) for label in ["id", "Title", "Authors", "Year", "Is lend?", "To who"]]
-        self.entries = [Gtk.Entry() for _ in [album.id, album.title, album.authors, album.year, album.is_lend, album.to_who]]
+        self.labels = [Gtk.Label(label) for label in ["id", "Title", "Authors", "Year", "Is lent?", "To who"]]
+        self.entries = [Gtk.Entry() for _ in [album.id, album.title, album.authors, album.year, album.is_lent, album.to_who]]
 
-        for label, entry, value in zip(self.labels, self.entries, [album.id, album.title, album.authors, album.year, album.is_lend, album.to_who]):
+        for label, entry, value in zip(self.labels, self.entries, [album.id, album.title, album.authors, album.year, album.is_lent, album.to_who]):
             self.box.pack_start(label, True, True, 0)
             entry.set_text(str(value))
             self.box.pack_start(entry, True, True, 0)
