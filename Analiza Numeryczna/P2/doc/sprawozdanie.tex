@@ -1,0 +1,102 @@
+\documentclass[10pt,wide]{mwart}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{svg}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{tabularx}
+%\usepackage{polski}
+\usepackage[centertags]{amsmath}
+\usepackage{amsthm}
+\usepackage{newlfont}
+\usepackage[polish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{listingsutf8}
+\usepackage{xcolor}
+\usepackage{url}
+\newtheorem{lemat}{Lemat}
+\newtheorem{tw}{Twierdzenie}
+\newtheorem{przyklad}{Przykład}
+\newtheorem{wn}{Wniosek}
+\newtheorem{zad}{Zadanie}
+\theoremstyle{definition}
+\newtheorem{df}{Definicja}
+\newtheorem{fc}{Fakt}
+\newtheorem{uw}{Uwaga}
+\newtheorem{szk}{Szkic dowodu}
+\renewcommand*{\figurename}{Wykres}
+\addto\captionspolish{\renewcommand{\figurename}{Wykres}}
+
+
+
+%\textwidth 16cm
+%\textheight 23.5cm
+%\topmargin -1cm
+%\oddsidemargin 0.5cm
+%\evensidemargin 0.5cm
+%\def\thefootnote{\arabic{footnote})}
+
+
+\pagestyle{plain}
+\begin{document}
+\title{\textbf{Pracownia nr 2 z Analizy Numerycznej}\\
+Sprawozdanie do zadania \textbf{P2.13}}
+\author{Wiktor Garbarek}
+\date{Wrocław, Listopad 2017}
+
+\maketitle
+ \thispagestyle{empty}
+ \section{O interpolacji klasycznej i Hermite'a.}
+ Interpolacja jest bardzo ważnym zagadnieniem w kontekście pomiarów czy upraszczania obliczeń. W wielu dziedzinach nauki, gdy wykonujemy jakieś pomiary,
+ to niestety możemy to zrobić tylko i wyłącznie na zbiorze dyskretnym. Często jednak znając wyniki pomiarów czy też obliczeń w dwóch punktach
+ (gdzie zrobiliśmy to relatywnie prosto) chcielibyśmy wiedzieć co się dzieje w przedziale pomiędzy (szczególnie, jeśli przewidujemy, że zjawisko jest ciągłe).
+ Oprócz tego, jeśli przybliżamy to co się dzieje w danym przedziale, chcielibyśmy wiedzieć jak bardzo się to przybliżenie \'mogło pomylić\' oraz, rzecz jasna, chcielibyśmy,
+ by ten błąd był jak najmniejszy.
+
+ \section{O problemach związanych z klasyczną interpolacją i ich rozwiązaniach.}
+
+ \section{Interpolacja Hermite'a - strona teoretyczna.}
+Gdy rozpatrujemy klasyczną interpolację, to istnienie wielomianu stopnia \(n\) przechodzącego przez \(n+1\) różnych punktów (zwanych też węzłami) jest w pewien sposób intuicyjnie oczywiste - wygląda jak rozwiązanie układu \(n \) równań ze względu na \(n\) zmiennych. Gdy chcemy być nieco bardziej formalni, to wystarczy zwrócić uwagę, że pewna macierz w tym układzie jest macierzą Vandermonde'a i jej wyznacznik jest niezerowy. Sprawa robi się mniej intuicyjna dla interpolacji Hermite'a - czy na pewno możemy dostać wielomian, który nie tylko w pewnych ustalonych punktach osiąga ustalone wartości, ale też pochodne w tych punktach osiągają ustalone wartości - i to nie tylko pierwsze pochodne, ale też drugie czy dalsze!
+\begin{tw} (Jednoznaczność istnienia wielomianu Hermite'a)
+Niech dane będą: liczba naturalna \(k\), liczby \(m_0, m_1, ..., m_k \in \mathbb{N}_+\), parami różne węzły \(x_0, x_1, ..., x_k\) oraz wielkości rzeczywiste \(y_i^{(i)}\) (\(i = 0,1,...,k; j = 0,1,...,m_k - 1\)). Przyjmijmy \(n := m_0 + m_1 + ... + m_k - 1 \). Wtedy istnieje dokładnie jeden wielomian \(H_n\) stopnia co najwyżej \(n\) spełniający następujące warunki:
+\begin{equation}
+H_n^{(j)}(x_i) = y_i^{(j)}
+\end{equation}
+dla \(i = 0, 1, ..., k\) oraz \(j = 0, 1, ..., m_k - 1\).
+
+\begin{proof}
+Okazuje się, że pomysł konstrukcji wielomianu Hermite'a oparty na postaci Newton'a klasycznego wielomianu interpolacyjnego, po pewnych ulepszeniach jest matematycznie poprawny, tj. spełnione są równania (1).
+Oznaczmy \(s_i := \sum_{j=0}^{i-1} m_i\), gdzie \(s_0 = 0\). Zauważmy, że każda liczba \(0 \leq l \leq n\) ma jednoznaczne przedstawienie w postaci \(l = s_i + j\), gdzie \(0 \leq i \leq k\) oraz \(0 \leq j \leq m_i - 1\).
+Zdefiniujmy zatem wielomiany węzłowe następująco:
+\begin{equation}
+p_{s_i + j}(x) = (x-x_i)^j \cdot \Pi_{j=0}^{i-1}(x - x_j)^{m_j}
+\end{equation}
+Wtedy
+\begin{equation}
+H_n(x) = \sum_{l=0}^{n}b_lp_l(x) = \sum_{i=0}^{k}\sum_{j = 0}^{m_{i-1}} b_{s_i + j} p_{s_i + j}(x)
+\end{equation}
+gdzie dla \(l = s_i + j\) to
+\begin{equation}
+b_l = \frac{y_i^j - \Big(\sum_{q=0}^{l-1}b_q \cdot p_q(x)\Big)^{(j)}(x_i)}{j!\cdot p_{s_i}(x_i)}
+\end{equation}
+TODO.
+\end{proof}
+\end{tw}
+
+ \section{Algorytm konstrukcji wielomianu Hermite'a.}
+
+\section{Porównanie interpolacji Hermite'a do interpolacji klasycznej}
+
+\section{Wnioski o użyteczności interpolacji }
+
+
+\begin{thebibliography}{9}
+\itemsep10pt
+\bibitem{JMJ} J. i M. Jankowscy, \emph{Przegląd metod i algorytmów numerycznych}, cz. 1, WNT, 1981.
+\bibitem{MS} Michelle Schatzman, \emph{Numerical analysis: a mathematical introduction}, Clarendon Press, Oxford, 2002
+\bibitem{CK} W. Cheney, D. Kincaid, \emph{Analiza numeryczna}, WNT, 2006.
+\bibitem{approx} \url{https://en.wikipedia.org/wiki/Approximations_of_pi} (Z dnia 10.11.2017).
+\bibitem{history} \url{https://en.wikipedia.org/wiki/Chronology_of_computation_of_pi} (Z dnia 10.11.2017).
+\end{thebibliography}
+\end{document}
