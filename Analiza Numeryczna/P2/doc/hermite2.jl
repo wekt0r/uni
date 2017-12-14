@@ -1,7 +1,7 @@
 #now working
 #author: Wiktor Garbarek
 module interpolation
-export newton1, bs_HermiteNewton, NewtonPoly, NewtonPolyval, NewtonToPower
+export newton1, bs_HermiteNewton, NewtonPoly, NewtonPolyval, NewtonToPower, bslin_HermiteNewton
 using Polynomials
 
 function newton1(n, xs, ys)
@@ -41,6 +41,27 @@ function bs_HermiteNewton(xs, ms, ys)
         bs = hcat(bs, vcat([ diff_quotient(i,j) for j in 1:1:(n-(i-2)) ], [nothing for j in 1:1:(i-2)]) )
     end
     return [bs[1,i] for i in 2:1:(n+1)]
+end
+
+function bslin_HermiteNewton(xs, ms, ys)
+    n = sum(ms)
+    col1bs = vcat([ repmat([xm[1]], xm[2]) for xm in zip(xs,ms)]...)
+    bs = vcat([ repmat([ym[1][1]], ym[2]) for ym in zip(ys,ms)]...)
+
+    xsDict = Dict(zip(xs,ys))
+    function diff_quotient(i, j)
+        if bs1[j] == bs1[j-i+1]
+            return xsDict[col1bs[j]][i]/factorial(i-1)
+        end
+        return (bs[j] - bs[j-1])/(bs1[j] - bs1[j-i+1])
+    end
+    for i in 2:1:n+1;
+        for j in n+1:-1:i;
+            bs[j] = diff_quotient(i,j)
+        end
+    end
+    return bs
+
 end
 
 type NewtonPoly

@@ -25,6 +25,7 @@
 \newtheorem{fc}{Fakt}
 \newtheorem{uw}{Uwaga}
 \newtheorem{szk}{Szkic dowodu}
+\newtheorem{alg}{Algorytm}
 \renewcommand*{\figurename}{Wykres}
 \addto\captionspolish{\renewcommand{\figurename}{Wykres}}
 
@@ -47,15 +48,27 @@ Sprawozdanie do zadania \textbf{P2.13}}
 
 \maketitle
  \thispagestyle{empty}
- \section{O interpolacji klasycznej i Hermite'a.}
+ \section{O interpolacji klasycznej, jej problemach i problemie interpolacji Hermite'a.}
  Interpolacja jest bardzo ważnym zagadnieniem w kontekście pomiarów czy upraszczania obliczeń. W wielu dziedzinach nauki, gdy wykonujemy jakieś pomiary,
  to niestety możemy to zrobić tylko i wyłącznie na zbiorze dyskretnym. Często jednak znając wyniki pomiarów czy też obliczeń w dwóch punktach
  (gdzie zrobiliśmy to relatywnie prosto) chcielibyśmy wiedzieć co się dzieje w przedziale pomiędzy (szczególnie, jeśli przewidujemy, że zjawisko jest ciągłe).
- Oprócz tego, jeśli przybliżamy to co się dzieje w danym przedziale, chcielibyśmy wiedzieć jak bardzo się to przybliżenie \'mogło pomylić\' oraz, rzecz jasna, chcielibyśmy,
- by ten błąd był jak najmniejszy.
+ Oprócz tego, jeśli przybliżamy jakąś funkcję w danym przedziale, to chcielibyśmy wiedzieć jak duży błąd towarzyszy temu przybliżeniu oraz, oczywiście, chcielibyśmy, by ten błąd był najmniejszy z możliwych.
 
- \section{O problemach związanych z klasyczną interpolacją i ich rozwiązaniach.}
+ Wiemy doskonale, że klasyczna interpolacja dla nieodpowiedniego zestawu węzłów, abstrahując od postaci wielomianu interpolacyjnego i algorytmu wykorzystanego do znalezienia tego wielomianu, może dawać nam przybliżenia obarczone bardzo dużym błędem.
+ Ponadto nie wykorzystuje ona wszystkich informacji, które możemy zmierzyć. Przykładowo w fizyce,
+ próbując znaleźć funkcję przebytej drogi w określonym czasie, chcielibyśmy móc wykorzystać inne możliwe do zmierzenia wartości,
+ takie jak prędkość i przyśpieszenie, które w naturalny sposób są odpowiednio pierwszą oraz drugą pochodną drogi po czasie.
+ Takich fizycznych interpretacji pochodnej jest mnóstwo: m.in moc jest pochodną pracy po czasie, siła pochodną pędu po czasie, natężenie prądu elektrycznego pochodną ładunku po czasie etc.
+ Oprócz tego możemy znaleźć też takie naturalne interpretacje pochodnej w chemii czy ekonomii.
 
+ W takim razie wartym uwagi jest do rozpatrzenia problem znalezienia wielomianu interpolacyjnego, który oprócz przyjmowania określonych wartości przez ten wielomian pewnych punktach węzłowych, pochodna tego wielomianu przyjmowałaby także określone wartości pochodnych. Być może chcielibyśmy też, by kolejne pochodne również się zgadzały.
+ Wielomian spełniający takie warunki nazywa się wielomianem interpolacyjnym Hermite'a\footnote{
+ Uwaga: W problemie interpolacji Hermite'a wymagamy,
+ żeby w jakimś węźle \(x_i\) określona została wartość funkcji i ewentualnie pierwsze \(m_i - 1\) wartości kolejnych pochodnych.
+ Przykładowo, gdy chcemy, by w punkcie \(0\) nasz wielomian miał wartość 0, jego pochodna wartość \(1\), a druga pochodna wartość \(42\),
+ jest problemem interpolacji Hermite'a, natomiast problem znalezienia wielomianu,
+ którego druga pochodna w punkcie \(0\) dawała \(1\), a pierwsza pochodna w punkcie \(1 \) dawała \(0\) nie jest, wedle definicji podanej w tej pracy, problemem interpolacji Hermite'a. (Chociaż oczywiście nadal pozostaje ciekawym problemem do rozważenia)}
+ \footnote{Warto zauważyć, że wiele angielskich źródeł, za wielomian interpolacyjny Hermite'a uznaje taki, dla którego wartości w węzłach, oraz wartości pierwszych pochodnych się zgadzają. Uogólnienie tutaj przedstawione często jest nazywane \emph{Osculating Interpolation}}
  \section{Interpolacja Hermite'a - strona teoretyczna.}
 Gdy rozpatrujemy klasyczną interpolację, to istnienie wielomianu stopnia \(n\) przechodzącego przez \(n+1\) różnych punktów (zwanych też węzłami) jest w pewien sposób intuicyjnie oczywiste - wygląda jak rozwiązanie układu \(n \) równań ze względu na \(n\) zmiennych. Gdy chcemy być nieco bardziej formalni, to wystarczy zwrócić uwagę, że pewna macierz w tym układzie jest macierzą Vandermonde'a i jej wyznacznik jest niezerowy. Sprawa robi się mniej intuicyjna dla interpolacji Hermite'a - czy na pewno możemy dostać wielomian, który nie tylko w pewnych ustalonych punktach osiąga ustalone wartości, ale też pochodne w tych punktach osiągają ustalone wartości - i to nie tylko pierwsze pochodne, ale też drugie czy dalsze!
 \begin{tw} (Jednoznaczność istnienia wielomianu Hermite'a)
@@ -64,27 +77,93 @@ Niech dane będą: liczba naturalna \(k\), liczby \(m_0, m_1, ..., m_k \in \math
 H_n^{(j)}(x_i) = y_i^{(j)}
 \end{equation}
 dla \(i = 0, 1, ..., k\) oraz \(j = 0, 1, ..., m_k - 1\).
+\begin{proof} (Istnienie rozwiązania)
+  Okazuje się, że pomysł konstrukcji wielomianu Hermite'a oparty na postaci Newton'a klasycznego wielomianu interpolacyjnego, po pewnych uogólnieniach, jest matematycznie poprawny, tj. spełnione są równania (1).
 
-\begin{proof}
-Okazuje się, że pomysł konstrukcji wielomianu Hermite'a oparty na postaci Newton'a klasycznego wielomianu interpolacyjnego, po pewnych ulepszeniach jest matematycznie poprawny, tj. spełnione są równania (1).
-Oznaczmy \(s_i := \sum_{j=0}^{i-1} m_i\), gdzie \(s_0 = 0\). Zauważmy, że każda liczba \(0 \leq l \leq n\) ma jednoznaczne przedstawienie w postaci \(l = s_i + j\), gdzie \(0 \leq i \leq k\) oraz \(0 \leq j \leq m_i - 1\).
+Oznaczmy \(s_i := \sum_{j=0}^{i-1} m_i\), gdzie \(s_0 = 0\). Zauważmy, że każda liczba \(0 \leq l \leq n\) ma jednoznaczne przedstawienie w postaci \(l = s_i + j\),
+ gdzie \(0 \leq i \leq k\) oraz \(0 \leq j \leq m_i - 1\).
 Zdefiniujmy zatem wielomiany węzłowe następująco:
 \begin{equation}
 p_{s_i + j}(x) = (x-x_i)^j \cdot \Pi_{j=0}^{i-1}(x - x_j)^{m_j}
 \end{equation}
-Wtedy
+Wtedy łatwo zauważyć, że \(p_{l}(x) = p_{s_i}(x)\cdot (x-x_i)^j \)
+Przyjmijmy teraz dwa następujące oznaczenia
 \begin{equation}
-H_n(x) = \sum_{l=0}^{n}b_lp_l(x) = \sum_{i=0}^{k}\sum_{j = 0}^{m_{i-1}} b_{s_i + j} p_{s_i + j}(x)
+  P_l(x) = \sum_{q = 0}^{l-1}b_q\cdot p_q(x) \\
+  Q_l(x) = \sum_{q = l+1}^{n}b_q\cdot p_q(x)
 \end{equation}
-gdzie dla \(l = s_i + j\) to
+Łatwo zauważyć następujący fakt
 \begin{equation}
-b_l = \frac{y_i^j - \Big(\sum_{q=0}^{l-1}b_q \cdot p_q(x)\Big)^{(j)}(x_i)}{j!\cdot p_{s_i}(x_i)}
+  H_n(x) = P_l(x) + b_l\cdot p_l(x) + Q_l(x) \text{   dla  } l=0,1,...,n \\
 \end{equation}
-TODO.
+gdzie przyjmujemy \(P_0 \equiv Q_n \equiv 0\)
+W takim razie możemy zauważyć, że
+\begin{equation}
+  (x-x_i)^{j+1} | Q_l(x) \Rightarrow Q_l^{(j)}(x_i) \equiv 0
+\end{equation}
+\begin{equation}
+H_n^{(j)} = P_l^{(j)}(x_i) + j!b_l\cdot p_{s_i}(x_i)
+\end{equation}
+\begin{equation}
+b_l = \frac{y_i^{(j)} - P_l^{(j)}(x_i)}{j!\cdot p_{s_i}(x_i)}
+\end{equation}
+Łatwo teraz zauważyć, że rozwiązanie tego problemu istnieje - bowiem zaczynamy dla \(b_0 = y_0^{(0)}\),
+a późniejsze współczynniki \(b_l\) obliczamy wykorzystując wcześniej skonstruowane współczynniki \(b_0,b_1,...b_{l-1}\).
+\end{proof}
+\begin{proof} (Jednoznaczność rozwiązania)
+  Chcemy dowieść, że istnieje dokładnie jeden taki wielomian Hermite'a spełniający równania (1). Przeprowadzimy dowód analogiczny dla klasycznej interpolacji.
+  Załóżmy zatem nie wprost, że istnieją dwa takie wielomiany \(H_n, W_n\), różne od siebie, które spełniają równania (1).
+  Rozważając wielomian \(H_n - W_n\) możemy zauważyć, że jest on stopnia co najwyżej \(n\) oraz suma krotności jego pierwiastków wynosi \(n+1\).
+  W takim razie, wielomian \(H_n - W_n \equiv 0\) na mocy zasadniczego twierdzenia algebry, a co za tym idzie \(H_n \equiv W_n\), co przeczy założeniu, że wielomiany są różne.
 \end{proof}
 \end{tw}
 
  \section{Algorytm konstrukcji wielomianu Hermite'a.}
+ Dowód przedstawiony w poprzednim rozdziale dał nam jednocześnie dość wygodny i ogólny algorytm. Ma on niestety swoje wady, o których powiemy za chwilę.
+ Uwaga: każde indeksowanie tablicy zaczynamy od 1, tj: jeśli wyciągamy element o indeksie 1 z tablicy [a_0, a_1, a_2, ... a_k], to otrzymamy a_0
+\begin{alg}
+  \begin{verbatim}
+
+      Wejście: [x_0, x_1, ..., x_k], [m_0, m_1, ..., m_k],
+               [(y_0^0, y_0^1, ..., y_0^(m_0 - 1)), ...,
+                                  (y_k^0, y_k^1, ..., y_k^(m_k - 1))]
+      Wyjście: [b_0, b_1, ..., b_n]
+
+      n := m_0 + m_1 + ... + m_k
+      C_1 := dla i od 0 do k: m_i razy wstaw x_i do tablicy
+      C_2 := dla i od 0 do k: m_i razy wstaw y_i^{(0)} do tablicy
+      dla i od 3 do n+1:
+        C_i = dla j od 1 do (n-(i-2)):
+          jeśli C_1[j+i-2] - C_1[j] nie jest zerem
+          to : wstaw (C_(i-1)[j+1] - C_(i-1)[j])/(C_1[j+i-2] - C_1[j])
+          wpp: gdy w mianowniku występuje x_q to wstaw y_q^{i-2}/(i-2)!
+
+      B := dla i od 2 do n+1: wstaw C_i[1]
+      zwróć B
+\end{verbatim}
+\end{alg}
+Łatwo zauważyć, że powyższy algorytm wykonuje \(O(n^2)\) obliczeń. Ponadto złożoność pamięciowa także wynosi \(O(n^2)\) (przechowujemy całą tablicę ilorazów różnicowych, których jest około \(\frac{n^2}{2}\))
+Okazuje się, że złożoność pamięciową możemy zmniejszyć do \(O(n)\). Oczywiście musimy zachować kolumnę \(C_1\), zatem wszystkie operacje będziemy wykonywać na \(C_2\)
+\begin{alg}
+  \begin{verbatim}
+
+      Wejście: [x_0, x_1, ..., x_k], [m_0, m_1, ..., m_k],
+               [(y_0^0, y_0^1, ..., y_0^(m_0 - 1)), ...,
+                                  (y_k^0, y_k^1, ..., y_k^(m_k - 1))]
+      Wyjście: [b_0, b_1, ..., b_n]
+
+      n := m_0 + m_1 + ... + m_k
+      B_1 := dla i od 0 do k: m_i razy wstaw x_i do tablicy
+      B := dla i od 0 do k: m_i razy wstaw y_i^{(0)} do tablicy
+      dla i od 2 do n+1:
+        dla j od n+1 do i iterując o -1:
+          jeśli B_1[j] - B_1[j-i+1] nie jest zerem
+          to : B[j] := (B[j] - B[j-1])/(B_1[j] - B_1[j-i+1])
+          wpp: B[j] := gdy w mianowniku występuje x_q to wstaw y_q^{i-1}/(i-1)!
+      zwróć B
+      TODOTODOTODOTODOTOD
+\end{verbatim}
+\end{alg}
 
 \section{Porównanie interpolacji Hermite'a do interpolacji klasycznej}
 
