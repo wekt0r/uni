@@ -170,22 +170,30 @@ Gdzie operator postfiksowy ! to zwykła silnia.
 
 Pojawiają się jednak problemy w tych obu algorytmach - obliczanie współczynników wielomianu w postaci Newtona nie jest numerycznie poprawne, a problem pojawia się przy dużej ilości węzłów.
 Ogólnie, zdecydowanie lepszą pod względem własności numerycznych i poprawności jest postać barycentryczna wielomianu interpolacyjnego.
-Niestety, z tego co autorowi wiadomo, problem utworzenia ogólnej postaci barycentrycznej dla dowolnego ciągu \(m_i\) to problem otwarty.
-Jednak istnieją przypadki szczególne - \(m_i = 2\) dla \(i = 0,...,k\) (tj. w każdym węźle \(x_i\) znamy wartość funkcji i wartość pierwszej pochodnej)
-algorytm wygląda następująco:
-\begin{tw} (Werner)
-Niech H będzie wielomianem stopnia 2k+1, który spełnia następujące równości
+
+Możemy za to wykorzystać postać barycentryczną ogólnego wielomianu Hermite'a zaproponowaną przez Wernera oraz Schneidera w \cite{CSWW}
+\begin{tw} (Schneider, Werner)
+Postać barycentryczna wielomianu Hermite'a spełniającego warunki (1) ma następującą postać
 \begin{equation}
-  H_{2k+1}(x_i) = y_i \text{ }\\, \text{ } H'_{2k+1} = y'_i \text{   dla   } i = 0, 1, ..., k
-\end{equation}
-Wtedy
-\begin{equation}
-  H_{2k+1}(x) = \frac{\sum_{i = 0}^{k}\Bigg(\frac{w_i}{x-x_i}\Big(\frac{w_i}{x-x_i} - v_i\Big)y_i + w_i\cdot\frac{w_i}{x-x_i}y'_i\Bigg) }{\sum_{i=0}^{k}\frac{w_i}{x-x_i}\Big(\frac{w_i}{x-x_i} - v_i\Big)}
-\end{equation}
-gdzie \(v_i := 2w_i \sum_{j = 0, j \neq i}^{k}\frac{1}{x_i - x_j}\)
-oraz \(H_{2k+1}(x_i) = y_i\) dla \(i=0,...,k\)
-gdzie mamy następujące związki rekurencyjne
+  H(x) = \frac{\sum_{i=0}^{k}\sum_{j=0}^{m_i - 1}\frac{\alpha_{i,j}}{(x - x_i)^{j+1}}\sum_{l=0}^{j}\frac{y_i^{(l)}}{l!}(x-x_i)^l}{\sum_{i=0}^{k}\sum_{j=0}^{m_i - 1}\frac{\alpha_{i,j}}{(x - x_i)^{j+1}}}
+\end{equation}.
+
+oraz dla \(i=0,...,k\)
+gdzie
 \end{tw}
+\begin{alg}
+  \begin{verbatim}
+    Wejście: x = [x_0, x_1, ..., x_k], [y_0, y_1, ..., y_k], [y'_0, y'_1, ..., y'_k]
+    Wyjście: [w_0, w_1, ..., w_n], [v_0, v_1, ..., v_n]
+
+    dla i od 0 do n-1:
+      dla j od i+1 od n:
+        a := 1/(x_i - x_j)
+        dla l := 0 do s_j - 1:
+          \beta_i,l
+
+  \end{verbatim}
+\end{alg}
 \begin{alg}
   \begin{verbatim}
     Wejście: x = [x_0, x_1, ..., x_k], [y_0, y_1, ..., y_k], [y'_0, y'_1, ..., y'_k]
@@ -221,5 +229,6 @@ gdzie mamy następujące związki rekurencyjne
 \bibitem{JMJ} J. i M. Jankowscy, \emph{Przegląd metod i algorytmów numerycznych}, cz. 1, WNT, 1981.
 \bibitem{CK} W. Cheney, D. Kincaid, \emph{Analiza numeryczna}, WNT, 2006.
 \bibitem{WW} W. Werner, \emph{Polynomial interpolation: Lagrange versus Newton}, Mathematics of Computation 43, no. 167 (1984).
+\bibitem{CSWW} C. Schneider, W. Werner \emph{Hermite interpolation: The barycentric approach}, Computing 46: 35, Springer, 1991.
 \end{thebibliography}
 \end{document}
