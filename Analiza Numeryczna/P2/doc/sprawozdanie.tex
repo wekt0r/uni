@@ -119,8 +119,9 @@ a późniejsze współczynniki \(b_l\) obliczamy wykorzystując wcześniej skons
 \end{tw}
 
  \section{Algorytm konstrukcji wielomianu Hermite'a.}
- Dowód przedstawiony w poprzednim rozdziale dał nam jednocześnie dość wygodny i ogólny algorytm. Ma on niestety swoje wady, o których powiemy za chwilę.
- Uwaga: każde indeksowanie tablicy zaczynamy od 1, tj: jeśli wyciągamy element o indeksie 1 z tablicy [a_0, a_1, a_2, ... a_k], to otrzymamy a_0
+ Dowód przedstawiony w poprzednim rozdziale dał nam jednocześnie dość wygodny i ogólny algorytm polegający na obliczaniu \(b_i\) jako ilorazów różnicowych.
+ Ma on niestety swoje wady, o których powiemy za chwilę.
+ Uwaga: każde indeksowanie tablicy zaczynamy od \(1\), tj. jeśli wyciągamy element o indeksie \(1\) z tablicy \([a_0, a_1, a_2, ... a_k]\), to otrzymamy \(a_0\)
 \begin{alg}
   \begin{verbatim}
 
@@ -143,7 +144,7 @@ a późniejsze współczynniki \(b_l\) obliczamy wykorzystując wcześniej skons
 \end{verbatim}
 \end{alg}
 Łatwo zauważyć, że powyższy algorytm wykonuje \(O(n^2)\) obliczeń. Ponadto złożoność pamięciowa także wynosi \(O(n^2)\) (przechowujemy całą tablicę ilorazów różnicowych, których jest około \(\frac{n^2}{2}\))
-Okazuje się, że złożoność pamięciową możemy zmniejszyć do \(O(n)\). Oczywiście musimy zachować kolumnę \(C_1\), zatem wszystkie operacje będziemy wykonywać na \(C_2\)
+Okazuje się, że złożoność pamięciową możemy zmniejszyć do \(O(n)\). Oczywiście musimy zachować kolumnę \(C_1\), w której trzymamy punkty węzłowe, zatem wszystkie operacje będziemy wykonywać na tablicy \(C_2\).
 \begin{alg}
   \begin{verbatim}
 
@@ -156,13 +157,35 @@ Okazuje się, że złożoność pamięciową możemy zmniejszyć do \(O(n)\). Oc
       B_1 := dla i od 0 do k: m_i razy wstaw x_i do tablicy
       B := dla i od 0 do k: m_i razy wstaw y_i^{(0)} do tablicy
       dla i od 2 do n+1:
-        dla j od n+1 do i iterując o -1:
+        dla j od n do i iterując o -1:
           jeśli B_1[j] - B_1[j-i+1] nie jest zerem
           to : B[j] := (B[j] - B[j-1])/(B_1[j] - B_1[j-i+1])
           wpp: B[j] := gdy w mianowniku występuje x_q to wstaw y_q^{i-1}/(i-1)!
       zwróć B
-      TODOTODOTODOTODOTOD
 \end{verbatim}
+\end{alg}
+
+Pojawiają się jednak problemy w tych obu algorytmach - obliczanie współczynników wielomianu w postaci Newtona nie jest numerycznie poprawne, a problem pojawia się przy dużej ilości węzłów.
+Ogólnie, zdecydowanie lepszą pod względem własności numerycznych i poprawności jest postać barycentryczna wielomianu interpolacyjnego.
+Niestety, z tego co autorowi wiadomo, problem utworzenia ogólnej postaci barycentrycznej dla dowolnego ciągu \(m_i\) to problem otwarty.
+Jednak istnieją przypadki szczególne - \(m_i = 2\) dla \(i = 0,...,k\) (tj. w każdym węźle \(x_i\) znamy wartość funkcji i wartość pierwszej pochodnej)
+algorytm wygląda następująco:
+\begin{tw} (Werner)
+Niech H będzie wielomianem stopnia 2k+1, który spełnia następujące równości
+\begin{equation}
+  H_{2k+1}(x_i) = y_i \text{ }\\, \text{ } H'_{2k+1} = y'_i \text{   dla   } i = 0, 1, ..., k
+\end{equation}
+Wtedy
+\begin{equation}
+  H_{2k+1}(x) = \frac{\sum_{i = 0}^{k}\Bigg(\frac{w_i}{x-x_i}\Big(\frac{w_i}{x-x_i} - v_i\Big)y_i + w_i\cdot\frac{w_i}{x-x_i}y'_i\Bigg) }{\sum_{i=0}^{k}\frac{w_i}{x-x_i}\Big(\frac{w_i}{x-x_i} - v_i\Big)}
+\end{equation}
+gdzie \(v_i := 2w_i \sum_{j = 0, j \neq i}^{k}\frac{1}{x_i - x_j}\)
+oraz \(H_{2k+1}(x_i) = y_i\) dla \(i=0,...,k\)
+\end{tw}
+\begin{alg}
+  \begin{verbatim}
+
+  \end{verbatim}
 \end{alg}
 
 \section{Porównanie interpolacji Hermite'a do interpolacji klasycznej}

@@ -45,18 +45,18 @@ end
 
 function bslin_HermiteNewton(xs, ms, ys)
     n = sum(ms)
-    col1bs = vcat([ repmat([xm[1]], xm[2]) for xm in zip(xs,ms)]...)
-    bs = vcat([ repmat([ym[1][1]], ym[2]) for ym in zip(ys,ms)]...)
-
+    bs1 = vcat([ repmat([xm[1]], xm[2]) for xm in zip(xs,ms)]...)
+    bs = vcat([ repmat([Float64(ym[1][1])], ym[2]) for ym in zip(ys,ms)]...)
+    print(bs)
     xsDict = Dict(zip(xs,ys))
     function diff_quotient(i, j)
         if bs1[j] == bs1[j-i+1]
-            return xsDict[col1bs[j]][i]/factorial(i-1)
+            return xsDict[bs1[j]][i]/factorial(i-1)
         end
         return (bs[j] - bs[j-1])/(bs1[j] - bs1[j-i+1])
     end
     for i in 2:1:n+1;
-        for j in n+1:-1:i;
+        for j in n:-1:i;
             bs[j] = diff_quotient(i,j)
         end
     end
