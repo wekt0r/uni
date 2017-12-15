@@ -160,10 +160,13 @@ Okazuje się, że złożoność pamięciową możemy zmniejszyć do \(O(n)\). Oc
         dla j od n do i iterując o -1:
           jeśli B_1[j] - B_1[j-i+1] nie jest zerem
           to : B[j] := (B[j] - B[j-1])/(B_1[j] - B_1[j-i+1])
-          wpp: B[j] := gdy w mianowniku występuje x_q to wstaw y_q^{i-1}/(i-1)!
+          wpp:
+            znajdź takie q, że B_1[j] = x_q, wtedy
+            B[j] := y_q^{i-1}/(i-1)!
       zwróć B
 \end{verbatim}
 \end{alg}
+Gdzie operator postfiksowy ! to zwykła silnia.
 
 Pojawiają się jednak problemy w tych obu algorytmach - obliczanie współczynników wielomianu w postaci Newtona nie jest numerycznie poprawne, a problem pojawia się przy dużej ilości węzłów.
 Ogólnie, zdecydowanie lepszą pod względem własności numerycznych i poprawności jest postać barycentryczna wielomianu interpolacyjnego.
@@ -181,10 +184,30 @@ Wtedy
 \end{equation}
 gdzie \(v_i := 2w_i \sum_{j = 0, j \neq i}^{k}\frac{1}{x_i - x_j}\)
 oraz \(H_{2k+1}(x_i) = y_i\) dla \(i=0,...,k\)
+gdzie mamy następujące związki rekurencyjne
 \end{tw}
 \begin{alg}
   \begin{verbatim}
+    Wejście: x = [x_0, x_1, ..., x_k], [y_0, y_1, ..., y_k], [y'_0, y'_1, ..., y'_k]
+    Wyjście: [w_0, w_1, ..., w_n], [v_0, v_1, ..., v_n]
 
+    a[0,0] := 1
+    b[0,0] := 0
+    dla k od 1 do n:
+      a[k,0] := 0
+      b[k,0] := 0
+    dla i od 1 do n:
+      dla k od 0 do i-1:
+        q[i,k] := 1/(x_k - x_i)
+        a[k,i] := q[i,k]a[k,i-1]
+        a[i,k+1] := a[i,k] - a[k,i]
+        b[k,i] := b[k,i-1] + q[i,k]
+        b[i,k+1] = b[i,k] - q[i,k]
+
+    wtedy
+    dla i od 0 do n:
+      w[i] = a[i,n]
+      v[i] = 2*w[i]b[i,n]
   \end{verbatim}
 \end{alg}
 
@@ -196,9 +219,7 @@ oraz \(H_{2k+1}(x_i) = y_i\) dla \(i=0,...,k\)
 \begin{thebibliography}{9}
 \itemsep10pt
 \bibitem{JMJ} J. i M. Jankowscy, \emph{Przegląd metod i algorytmów numerycznych}, cz. 1, WNT, 1981.
-\bibitem{MS} Michelle Schatzman, \emph{Numerical analysis: a mathematical introduction}, Clarendon Press, Oxford, 2002
 \bibitem{CK} W. Cheney, D. Kincaid, \emph{Analiza numeryczna}, WNT, 2006.
-\bibitem{approx} \url{https://en.wikipedia.org/wiki/Approximations_of_pi} (Z dnia 10.11.2017).
-\bibitem{history} \url{https://en.wikipedia.org/wiki/Chronology_of_computation_of_pi} (Z dnia 10.11.2017).
+\bibitem{WW} W. Werner, \emph{Polynomial interpolation: Lagrange versus Newton}, Mathematics of Computation 43, no. 167 (1984).
 \end{thebibliography}
 \end{document}
