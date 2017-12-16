@@ -118,7 +118,8 @@ a późniejsze współczynniki \(b_l\) obliczamy wykorzystując wcześniej skons
 \end{proof}
 \end{tw}
 
- \section{Algorytm konstrukcji wielomianu Hermite'a.}
+ \section{Algorytmy konstrukcji wielomianu Hermite'a.}
+ \subsection{Postać Newtona}
  Dowód przedstawiony w poprzednim rozdziale dał nam jednocześnie dość wygodny i ogólny algorytm polegający na obliczaniu \(b_i\) jako ilorazów różnicowych.
  Ma on niestety swoje wady, o których powiemy za chwilę.
  Uwaga: każde indeksowanie tablicy zaczynamy od \(1\), tj. jeśli wyciągamy element o indeksie \(1\) z tablicy \([a_0, a_1, a_2, ... a_k]\), to otrzymamy \(a_0\)
@@ -170,56 +171,55 @@ Gdzie operator postfiksowy ! to zwykła silnia.
 
 Pojawiają się jednak problemy w tych obu algorytmach - obliczanie współczynników wielomianu w postaci Newtona nie jest numerycznie poprawne, a problem pojawia się przy dużej ilości węzłów.
 Ogólnie, zdecydowanie lepszą pod względem własności numerycznych i poprawności jest postać barycentryczna wielomianu interpolacyjnego.
-
-Możemy za to wykorzystać postać barycentryczną ogólnego wielomianu Hermite'a zaproponowaną przez Wernera oraz Schneidera w \cite{CSWW}
+\subsection{Postać barycentryczna.}
+Możemy za to wykorzystać postać barycentryczną ogólnego wielomianu Hermite'a zaproponowaną przez Wernera oraz Schneidera w \cite{CSWW}.
 \begin{tw} (Schneider, Werner)
 Postać barycentryczna wielomianu Hermite'a spełniającego warunki (1) ma następującą postać
 \begin{equation}
   H(x) = \frac{\sum_{i=0}^{k}\sum_{j=0}^{m_i - 1}\frac{\alpha_{i,j}}{(x - x_i)^{j+1}}\sum_{l=0}^{j}\frac{y_i^{(l)}}{l!}(x-x_i)^l}{\sum_{i=0}^{k}\sum_{j=0}^{m_i - 1}\frac{\alpha_{i,j}}{(x - x_i)^{j+1}}}
 \end{equation}.
-
-oraz dla \(i=0,...,k\)
-gdzie
+Oznaczmy następująco przez \(\gamma_i(x) = \alpha_i(x)\Pi_{j=i+1}^{n}(x-x_j)^{m_j}\), gdzie \(\alpha_i(x) = \sum_{j=0}^{m_i - 1}\alpha_{i,m_i-j-1}(x-x_i)^j\)
+oraz dla \(i=0,...,k\). Można dowieść, że \(\alpha_{i,m_i-j-1} = \gamma_i[(x_i)^{j+1}, (x_{i+1})^{m_{i+1}}, ..., (x_n)^{m_n}]\).
 \end{tw}
+Dowody tych zależności, jak i poprawności poniższego algorytmu, wraz z szerszym wytłumaczeniem można znaleźć w \cite{CSWW}.
 \begin{alg}
   \begin{verbatim}
-    Wejście: x = [x_0, x_1, ..., x_k], [y_0, y_1, ..., y_k], [y'_0, y'_1, ..., y'_k]
-    Wyjście: [w_0, w_1, ..., w_n], [v_0, v_1, ..., v_n]
 
-    dla i od 0 do n-1:
-      dla j od i+1 od n:
-        a := 1/(x_i - x_j)
-        dla l := 0 do s_j - 1:
-          \beta_i,l
+    Wejście: [x_0, x_1, ..., x_k], [m_0, m_1, ..., m_k],
+             [(y_0^0, y_0^1, ..., y_0^(m_0 - 1)), ...,
+                                (y_k^0, y_k^1, ..., y_k^(m_k - 1))]
+    Wyjście:
 
-  \end{verbatim}
-\end{alg}
-\begin{alg}
-  \begin{verbatim}
-    Wejście: x = [x_0, x_1, ..., x_k], [y_0, y_1, ..., y_k], [y'_0, y'_1, ..., y'_k]
-    Wyjście: [w_0, w_1, ..., w_n], [v_0, v_1, ..., v_n]
-
-    a[0,0] := 1
-    b[0,0] := 0
-    dla k od 1 do n:
-      a[k,0] := 0
-      b[k,0] := 0
-    dla i od 1 do n:
-      dla k od 0 do i-1:
-        q[i,k] := 1/(x_k - x_i)
-        a[k,i] := q[i,k]a[k,i-1]
-        a[i,k+1] := a[i,k] - a[k,i]
-        b[k,i] := b[k,i-1] + q[i,k]
-        b[i,k+1] = b[i,k] - q[i,k]
-
-    wtedy
-    dla i od 0 do n:
-      w[i] = a[i,n]
-      v[i] = 2*w[i]b[i,n]
+    dla i od 0 do k-1:
+      dla d od i+1 do k:
+        a := 1/(x_i - x_d)
+        dla j od 0 do m_d - 1:
+          B[i,0] = a * B[i,0]
+          dla l od 1 do m_i - 1:
+            B[i,l] = a*(B[i,l] - B[i,l-1])
+          B[d,j] = B[d,j] - B[i, m_i - 1]
+    dla i od 1 do k:
+      dla l od 0 do m_i - 1:
+        A[i, m_i - l - 1] = B[i,l]
+    zwróć A
   \end{verbatim}
 \end{alg}
 
-\section{Porównanie interpolacji Hermite'a do interpolacji klasycznej}
+\section{Błędy interpolacji Hermite'a oraz porównanie do interpolacji Newtona.}
+Postaramy się sprawdzić jak wygląda błąd interpolacji Hermite'a, oraz porównać co jest lepsze -
+mieć mniej węzłów i znać pochodną (interpolacja Hermite'a), czy mieć więcej węzłów, ale bez znajomości pochodnej (interpolacja Newtona).
+Nasze testy oprzemy na dwóch klasach funkcji:
+wielomianach stopni wyższych, niż zadana ilość węzłów
+(w innym przypadku znajdowalibyśmy za każdym razem ten sam wielomian, co nie miałoby większego sensu),
+oraz wielomianach trygonometrycznych, tj. funkcjach postaci \(f(x) = \sum_{n=0}^{m}(a_n\cos(nx) + b_n\sin(nx)\).
+W tym drugim przypadku, bardzo prosto możemy znaleźć pochodną, bowiem zauważymy, że \(f'(x) = \sum_{n=1}^{m}(-\frac{a_n}{n})\sin(nx) + \frac{b_n}{n}\cos(nx)\)
+Oprócz tego przetestujemy rzeczone interpolacje na paru funkcjach postaci \(f(x) = w(x)e^{p(x)}\) gdzie \(w,p\) są wielomianami oraz dla funkcji Rungego
+\subsection{Błędy interpolacji wielomianów wyższych stopni w węzłach równoodległych}
+\subsection{Błędy interpolacji wielomianów wyższych stopni w węzłach Czebyszewa}
+\subsection{Błędy interpolacji wielomianów trygonometrycznych w węzłach równoodległych}
+\subsection{Błędy interpolacji wielomianów trygonometrycznych w węzłach Czebyszewa}
+\subsection{Błędy interpolacji funkcji Rungego}
+\subsection{Błędy interpolacji funkcji postaci \(w(x)e^{p(x)}\)}
 
 \section{Wnioski o użyteczności interpolacji }
 
