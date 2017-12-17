@@ -3,7 +3,7 @@ include("utilities.jl")
 module WGPolyTesting
 export horner, generate_polynomial_for_hermite, run_polytest, chebyshev_nodes
 
-using WGUtilities
+importall WGUtilities
 
 function horner( a, z )
     n   = length(a)
@@ -63,8 +63,9 @@ function run_polytest(N1,nodes_type="equally_spaced")
         hermite = get_hermite_NewtonPoly(testcase[2]...)
         newton = get_NewtonPoly(testcase[3]...)
         for x in domain
-            push!(hermite_errors[x], abs(horner(testcase[1],x)[1] - newtonPolyval(hermite, x)))
-            push!(newton_errors[x],  abs(horner(testcase[1],x)[1] - newtonPolyval(newton, x)))
+            exact = horner(testcase[1],x)[1]
+            push!(hermite_errors[x], abs(exact - newtonPolyval(hermite, x))/abs(exact))
+            push!(newton_errors[x],  abs(exact - newtonPolyval(newton, x))/abs(exact))
         end
     end
 

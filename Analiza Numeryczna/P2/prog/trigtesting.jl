@@ -1,8 +1,11 @@
+include("trigonometric_polynomials.jl")
+include("utilities.jl")
+
 module WGTrigTesting
 export generate_trigpoly_for_hermite, run_trigtest
 
-include("trigonometric_polynomials.jl")
 importall WGTrigonometricPoly
+importall WGUtilities
 
 function generate_trigpoly_for_hermite(hnodes, cnodes, degree_list, coeffs_list)
     degree = rand(degree_list)
@@ -43,12 +46,13 @@ function run_trigtest(N1, nodes_type="equally_spaced")
         newton_errors[x] = [abs(value(testcase[1],x) - newtonPolyval(newton, x))]
     end
     for i in 1:1:99;
-        testcase = generate_polynomial_for_hermite(NODES1hermite, NODES1classic,DEGREE1list, COEFFS1list)
+        testcase = generate_trigpoly_for_hermite(NODES1hermite, NODES1classic,DEGREE1list, COEFFS1list)
         hermite = get_hermite_NewtonPoly(testcase[2]...)
         newton = get_NewtonPoly(testcase[3]...)
         for x in domain
-            push!(hermite_errors[x], abs(value(testcase[1],x)[1] - newtonPolyval(hermite, x)))
-            push!(newton_errors[x],  abs(value(testcase[1],x)[1] - newtonPolyval(newton, x)))
+            exact = value(testcase[1],x)
+            push!(hermite_errors[x], abs(exact - newtonPolyval(hermite, x))/abs(exact))
+            push!(newton_errors[x],  abs(exact - newtonPolyval(newton, x))/abs(exact))
         end
     end
 
