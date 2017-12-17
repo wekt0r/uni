@@ -211,17 +211,33 @@ mieć mniej węzłów i znać pochodną (interpolacja Hermite'a), czy mieć wi
 Nasze testy oprzemy na dwóch klasach funkcji:
 wielomianach stopni wyższych, niż zadana ilość węzłów
 (w innym przypadku znajdowalibyśmy za każdym razem ten sam wielomian, co nie miałoby większego sensu),
-oraz wielomianach trygonometrycznych, tj. funkcjach postaci \(f(x) = \sum_{n=0}^{m}(a_n\cos(nx) + b_n\sin(nx)\).
-W tym drugim przypadku, bardzo prosto możemy znaleźć pochodną, bowiem zauważymy, że \(f'(x) = \sum_{n=1}^{m}(-\frac{a_n}{n})\sin(nx) + \frac{b_n}{n}\cos(nx)\)
-Oprócz tego przetestujemy rzeczone interpolacje na paru funkcjach postaci \(f(x) = w(x)e^{p(x)}\) gdzie \(w,p\) są wielomianami oraz dla funkcji Rungego
+oraz wielomianach trygonometrycznych, tj. funkcjach postaci \(f(x) = \sum_{i=0}^{n}(a_i\cos(ix) + b_i\sin(ix)\).
+W tym drugim przypadku, bardzo prosto możemy znaleźć pochodną, bowiem zauważymy, że \(f'(x) = \sum_{i=1}^{n}(-\frac{a_i}{i})\sin(ix) + \frac{b_i}{i}\cos(ix)\)
+Oprócz tego przetestujemy rzeczone interpolacje na paru funkcjach \(f(x) = e^{\pm x^2}\) oraz dla funkcji Rungego.
 \subsection{Błędy interpolacji wielomianów wyższych stopni w węzłach równoodległych}
+Wszystkie wielomiany będziemy interpolować na przedziale \([-1,1]\).
+%\includegraphics[scale=0.7]{arithmeanpolyeq.png}
+\captionof{figure}{Wykres średniej arytmetycznej błędów interpolacji dla 100 losowych wielomianów interpolowanych w 20 węzłach równoodległych (10 oraz pierwsze pochodne dla interpolacji Hermite'a)}
+%\includegraphics[scale=0.7]{arithmeanpolyeqq.png}
+\captionof{figure}{Wykres średniej arytmetycznej błędów interpolacji dla 100 losowych wielomianów interpolowanych w 30 węzłach równoodległych (15 oraz pierwsze pochodne dla interpolacji Hermite'a)}
+Możemy zauważyć, że interpolacja Hermite'a daje nieco lepsze przybliżenie wielomianu - pamiętajmy przy tym też, że mamy dwukrotnie mniej węzłów kosztem znajomości pochodnej, by stopień wielomianu interpolacyjnego został taki sam.
+Redukuje ona też w lekkim stopniu efekt Rungego na krańcach przedziałów, ale niestety nie jest to duża poprawa
 \subsection{Błędy interpolacji wielomianów wyższych stopni w węzłach Czebyszewa}
+Możemy zauważyć, że interpolacja Hermite'a w węzłach Czebyszewa nie daje lepszych efektów.
+Błąd interpolacji jest jawnie zależny tylko od liczby węzłów - w przypadku interpolacji Hermite'a mamy dwa razy mniej węzłów niż w wypadku klasycznej.
 \subsection{Błędy interpolacji wielomianów trygonometrycznych w węzłach równoodległych}
+Możemy odnieść wrażenie, że początkowo interpolacja Newtona wydaje się lepsza, jednak wraz z większą ilością węzłów rośnie dokładność interpolacji Hermite'a.
 \subsection{Błędy interpolacji wielomianów trygonometrycznych w węzłach Czebyszewa}
+Wyniki są bardzo zbliżone do siebie.
 \subsection{Błędy interpolacji funkcji Rungego}
-\subsection{Błędy interpolacji funkcji postaci \(w(x)e^{p(x)}\)}
+Widzimy, że w przypadku interpolacja Hermite'a, mimo dużej poprawy względem zwykłej interpolacji, dalej reprezentuje efekt Rungego.
+\subsection{Błędy interpolacji funkcji \(e^{\pm x^2}\)}
 
 \section{Wnioski o użyteczności interpolacji }
+Na podstawie przeprowadzonych testów możemy zdecydować, że gdy zależy nam na jak najmniejszym błędzie interpolacji i nie martwimy się o wysoki stopień wielomianu, to dodatkowa wiedza w postaci pochodnych da nam zdecydowanie lepsze wyniki.
+Przede wszystkim każda znajomość pochodnej (bądź pochodnych) działa w pewien sposób jak dobranie dodatkowych węzłów do interpolacji klasycznej.
+Jednakże, gdy zależy nam na minimalizacji stopnia wielomianu interpolacyjnego, to często lepszym rozwiązaniem będzie odpowiedni dobór węzłów, jeśli mamy taką możliwość.
+Możemy też zauważyć, że na niekorzyść interpolacji Hermite'a działa występowanie podobnych problemów jak w klasycznej interpolacji (m. in. efektu Rungego).
 
 
 \begin{thebibliography}{9}

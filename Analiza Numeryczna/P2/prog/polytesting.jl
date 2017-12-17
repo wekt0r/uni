@@ -19,6 +19,7 @@ function horner( a, z )
     end
     return p, dp, ddp*2, dddp*6
 end
+
 chebyshev_nodes(n) = [cos((BigFloat(2*i-1)pi)/(2*n)) for i in 1:1:n]
 
 function generate_polynomial_for_hermite(hnodes, cnodes,degree_list, coeffs_list)

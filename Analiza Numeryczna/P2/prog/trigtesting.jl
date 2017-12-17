@@ -2,10 +2,12 @@ include("trigonometric_polynomials.jl")
 include("utilities.jl")
 
 module WGTrigTesting
-export generate_trigpoly_for_hermite, run_trigtest
+export generate_trigpoly_for_hermite, run_trigtest, chebyshev_nodes
 
 importall WGTrigonometricPoly
 importall WGUtilities
+
+chebyshev_nodes(n) = [cos((BigFloat(2*i-1)pi)/(2*n)) for i in 1:1:n]
 
 function generate_trigpoly_for_hermite(hnodes, cnodes, degree_list, coeffs_list)
     degree = rand(degree_list)
@@ -51,8 +53,8 @@ function run_trigtest(N1, nodes_type="equally_spaced")
         newton = get_NewtonPoly(testcase[3]...)
         for x in domain
             exact = value(testcase[1],x)
-            push!(hermite_errors[x], abs(exact - newtonPolyval(hermite, x))/abs(exact))
-            push!(newton_errors[x],  abs(exact - newtonPolyval(newton, x))/abs(exact))
+            push!(hermite_errors[x], abs(exact - newtonPolyval(hermite, x)))
+            push!(newton_errors[x],  abs(exact - newtonPolyval(newton, x)))
         end
     end
 
