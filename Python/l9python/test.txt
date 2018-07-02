@@ -1,0 +1,7 @@
+	hello, i ma
+de a new tab
+	 hello
+		what about
+splitting lines
+with new line symbol?
+	that is interesting and	will 	be more affected 	by python itself

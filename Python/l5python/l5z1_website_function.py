@@ -1,6 +1,7 @@
 import re
 import urllib.request
 from bs4 import BeautifulSoup
+from time import time
 
 HTML_URL_REGEX = re.compile(r'<a.*?href=[\'|\"](.*?)[\'|\"].*?>', re.IGNORECASE)
 PYTHON_REGEX = re.compile(r'python', re.IGNORECASE)
@@ -22,7 +23,6 @@ def _impose_function_on_website_and_subsites(action, main_url, depth, already_vi
                 if url not in already_visited_static:
                     already_visited_static.add(url)
                     yield from _impose_function_on_website_and_subsites(action, url, depth-1)
-
         except urllib.error.HTTPError:
             yield "Connection Error on {}".format(main_url)
         except:
@@ -33,11 +33,13 @@ def get_all_python_sentences(html_page):
     return [sentence for sentence in sentences if re.search(PYTHON_REGEX, sentence)]
 
 #some test
+begin = time()
 print("---")
 for ls in impose_function_on_website_and_subsites(get_all_python_sentences, "https://www.ii.uni.wroc.pl/~marcinm/dyd/python/", 2):
     if isinstance(ls, list):
-        print("*\n".join(ls))
+        print("\n*".join(ls))
         #print(ls)
     else:
         print(ls)
     print("---")
+print("it took {}".format(time() - begin))

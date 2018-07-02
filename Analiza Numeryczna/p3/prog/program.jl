@@ -1,0 +1,5 @@
+include("gauss.jl")
+include("montecarlo.jl")
+include("newtoncotes.jl")
+include("utilities.jl")
+include("padua.jl")

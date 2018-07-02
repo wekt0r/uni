@@ -1,0 +1,573 @@
+\documentclass[10pt,wide]{mwart}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{svg}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{tabularx}
+%\usepackage{polski}
+\usepackage[centertags]{amsmath}
+\usepackage{amsthm}
+\usepackage{newlfont}
+\usepackage[polish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{listingsutf8}
+\usepackage{xcolor}
+\usepackage{url}
+\newtheorem{lemat}{Lemat}
+\newtheorem{tw}{Twierdzenie}
+\newtheorem{przyklad}{Przykład}
+\newtheorem{wn}{Wniosek}
+\newtheorem{zad}{Zadanie}
+\theoremstyle{definition}
+\newtheorem{df}{Definicja}
+\newtheorem{fc}{Fakt}
+\newtheorem{uw}{Uwaga}
+\newtheorem{szk}{Szkic dowodu}
+\renewcommand*{\figurename}{Wykres}
+\addto\captionspolish{\renewcommand{\figurename}{Wykres}}
+
+
+
+%\textwidth 16cm
+%\textheight 23.5cm
+%\topmargin -1cm
+%\oddsidemargin 0.5cm
+%\evensidemargin 0.5cm
+%\def\thefootnote{\arabic{footnote})}
+
+
+\pagestyle{plain}
+\begin{document}
+\title{\textbf{Pracownia nr 1 z Analizy Numerycznej}\\
+Sprawozdanie do zadania \textbf{P1.1}}
+\author{Wiktor Garbarek}
+\date{Wrocław, Listopad 2017}
+
+\maketitle
+ \thispagestyle{empty}
+ \section{Parę słów o liczbie \(\pi\) i jej przybliżeniach w przeszłości.}
+ Każdy z nas słyszał o liczbie \(\pi\).
+ Ta magiczna stała, o której dowiadujemy się już w szkole podstawowej,
+ definiowana jako stosunek obwodu okręgu do długości jego średnicy, jest równa \( \pi = 3.14159... \).
+ Pojawia się w każdej nauce ścisłej, czasami w bardzo nieoczekiwanych miejscach co tylko potęguje potrzebę posiadania dobrej metody znajdowania jej przyblżenia.
+ Lecz co pojawia się w miejscu wielokropka? Co więcej możemy powiedzieć o niej samej i jej własnościach, które być może pomogą nam (lub utrudnią) znajdowanie przybliżeń? Jak znaleźć dalsze cyfry po przecinku przybliżenia liczby \(\pi\)? I skąd będziemy wiedzieć, że one są poprawne?
+
+ \par Problem przybliżenia liczby \(\pi\), czy to do celów inżynierskich, czy z ludzkiej ciekawości, towarzyszył matematykom od zarania dziejów.
+ Już w starożytnym Babilonie wiadomo było, że \(\pi\) jest stałą oraz \(\pi \approx 3 \), ponad tysiąc lat później \textbf{Archimedes} oszacował \(\pi\) jako \(\frac{223}{71} < \pi < \frac{22}{7}\) wykorzystując obwody wielokątów foremnych opisanych i wpisanych na danym okręgu,
+a już na początku naszej ery Chińscy matematycy pokazali, że \(\pi \approx \frac{355}{113}\).
+ \par W XVI wieku, \textbf{Ludolph van Ceulen} obliczył \(\pi\) z dokładnością do 35 cyfr po przecinku wykorzystując \(2^{62}\)-kąt foremny.\footnote{Stąd też liczbę \(\pi\) nazywamy też \emph{ludolfiną}.}
+ Później jeszcze pod koniec XVIII wieku Jurij Vega, słoweński matematyk,
+ znalazł 136 początkowych cyfr dziesiętnych przybliżenia liczby \(\pi\), a w następnym stuleciu, angielski matematyk William Shanks otrzymał ponad 500 cyfr dokładnych rozwinięcia dziesiętnego ludolfiny.
+ Oczywiście z powodu rozwoju technologii, jak i samej matematyki, kolejni amatorzy i entuzajaści znajdowali kolejne cyfry dokładne naszej bohaterki, więc moglibyśmy tak wyliczać jeszcze długo.
+ Wartym jednak zanotowania jest, że z tego co autorowi wiadomo, dzisiaj znamy \(22,459,157,718,361\) cyfr dziesiętnych rozwinięcia liczby \(\pi\) za sprawą Petera Trueba. Wynik ten został otrzymany za pomocą algorytmu Chudnovsky'ego.
+ \\\begin{center}
+ \includegraphics[scale=0.4]{pi_approximations.png}
+ \captionof{figure}{Wykres rekordów dokładności przybliżeń liczby \(\pi\) w zależności od roku - źródło: $wikipedia.org$}
+\end{center}
+
+ \section{O problemach związanych ze liczbą \(\pi\).}
+ \par Okazuje się, że bohaterka tego akapitu jest bardzo problematyczna jeśli chodzi o jej własności.
+ Gdyby \(\pi\) było wymierne, to jej rozwinięcie dziesiętne byłoby okresowe bądź skończone i problem byłby zdecydowanie prostszy.
+ Jednak jak wszyscy wiemy - liczba \(\pi\) jest niewymierna.\footnote{Chociaż pewnego razu matematyk-amator - Edward J. Goodwin w 1897 chciał prawnie ustanowić, że \(\pi = 3.2\)} Wbrew pozorom nie jest to fakt taki trywialny do udowodnienia -
+ od dawna matematycy przewidywali, że liczba \(\pi\) jest niewymierna, ale przekonujący dowód dał dopiero \textbf{Johann Heinrich Lambert} w 1761 roku wykorzystując własności pewnego rozwinięcia funkcji \(\tan(x)\).
+ \par Oprócz tego pojawia się jeszcze jeden mały problem - \emph{przestępność}. W skrócie można powiedzieć, że liczba \(\pi\) jest ''niewymierna w inny sposób'' niż takie \(\sqrt{2}\) czy \(\sqrt[3]{5}\).
+ Te dwie wspomniane liczby, jak łatwo zauważyć, są pierwiastkami wielomianów o współczynnikach wymiernych (Odpowiednio: \(x^2 - 2\) oraz \(x^3 - 5\)).
+ A co z liczbą \(\pi\)? Okazuje się, że dla liczby \(\pi\) nigdy nie znajdziemy wielomianu o współczynnikach wymiernych, dla którego \(w(\pi) = 0\).
+ Dowód tego faktu przedstawił \textbf{Ferdinand von Lindemann} relatywnie niedawno, bowiem w 1882 roku.
+ To sprawia, że nie możemy znaleźć przybliżenia \(\pi\) poprzez szukanie pierwiastka jakiegoś wielomianu - chociażby metodą bisekcji, metodą Newtona czy bardziej zaawansowaną metodą, która dałaby nam jeszcze szybszą zbieżność do \(\pi\).
+ Pojawia się więc problem: jak tego przybliżenia można szukać?
+ Pierwsze co nasuwa się na myśl to fakt, że można wykorzystać jakąś formułę rekurencyjną wzoru opartego na geometrycznej interpretacji liczby \(\pi\) (tak zrobimy w tej pracy).
+ Drugim pomysłem, już bardziej wysublimowanym, byłoby znalezienie przybliżenia odpowiedniej sumy bądź sumy częściowej jakiegoś szeregu zbieżnego do \(\pi\).\footnote{A takich szeregów czy rozwinięć w sumy jest naprawdę dużo! Od znanej wszystkim tożsamości Eulera dla sumy odwrotności kwadratów kolejnych liczb naturalnych,
+ którą moglibyśmy pomnożyć przez 6, a później wziąć pierwiastek z wyniku (okazuje się jednak, że nie jest to zbyt efektywna metoda), po pewne sumy wykorzystujące formuły Machina, które są bardzo szybko zbieżne.}
+ \section{Podstawowe twierdzenia, wykorzystane wzory i opis zadania.}
+Będziemy szukać przybliżenia liczby \(\pi\) częściowo wykorzystując pomysł Archimedesa - nie wykorzystamy jednak obwodu, a pola wielokątów foremnych. Dokładniej mówiąc, wykorzystamy wzór na pole \(2^{n+1}\)-kąta foremnego oraz formuły rekurencyjne przedstawione w następnym rozdziale, które ten wzór spełnia.
+Wykażemy, że wzór ten rzeczywiście spełnia te rekurencje oraz powiemy jakie problemy od strony numerycznej niesie ze sobą wykorzystanie tych wzorów. Oszacujemy też błędy powstające przy każdej iteracji, powstałe przez niedokładność reprezentacji liczby jako słowo maszynowe.
+Wszelkie testy numeryczne wykonamy za pomocą programu napisanego w języku \(Julia\) wykorzystując arytmetyki pojedynczej oraz podwójnej precyzji (W Julii reprezentowane odpowiednio przez typy \(Float32\) oraz \(Float64\)).
+Na koniec spróbujemy odpowiedzieć sobie, jak szybko ta metoda jest zbieżna do szukanego przez nas przybliżenia \(\pi\).
+\begin{tw}
+  Wzór na pole \(2^{n+1}\)-kąta foremnego wpisanego w okrąg o promieniu \(1\) wyraża się wzorem
+  \begin{equation*}
+    P_{2^{n+1}} = 2^n\sin{\frac{\pi}{2^n}}.
+  \end{equation*}
+\begin{tabularx}{\textwidth}{@{}XX@{}}
+    \begin{center}
+    \begin{tikzpicture}
+      \draw [thick,black!50] circle (1.5cm) ;
+      \draw (0:1.5) \foreach \x in {45,90,135,180,225,270,315,360} {
+        -- (\x:1.5)
+        } -- cycle (90:2) node[above] {$n=8$} ;
+      \draw (1:0) \foreach \x in {90,270} {
+          -- (\x:1.5)
+          } -- cycle (90:2) ;
+      \draw (1:0) \foreach \x in {0,180} {
+          -- (\x:1.5)
+          } -- cycle (90:2) ;
+      \draw (1:0) \foreach \x in {45,225} {
+          -- (\x:1.5)
+          } -- cycle (90:2) ;
+      \draw (1:0) \foreach \x in {135,315} {
+          -- (\x:1.5)
+          } -- cycle (90:2) ;
+
+    \end{tikzpicture}
+  \end{center}
+  &
+  \begin{proof}
+    Zauważmy, że nasz \(2^{n+1}\)-kąt możemy podzielić na tyle samo trójkątówo wspólnym wierzchołku w środku okręgu tak jak na rysunku obok. Każdy z tych trójkątów ma pole równe \(\frac{1\cdot1\cdot\sin{\alpha}}{2}\). Gdzie \(\alpha = 2\pi/2^{n+1}\).
+    W takim razie
+    \begin{equation*}
+    P_{2^{n+1}} = 2^{n+1}\cdot\frac{1\cdot1\cdot\sin{\frac{\pi}{2^n}}}{2} = 2^{n}\sin{\frac{\pi}{2^n}}
+  \end{equation*}
+  \end{proof}
+\end{tabularx}
+\end{tw}
+Łatwo zauważyć, że wtedy ciąg \(P_{2^{n+1}}\) zbiega do pola okręgu o promieniu 1, którego pole jest równe szukanej liczbie \(\pi\).
+Żeby jednak nie machać rękami, udowodnijmy sobie to dokładnie.
+\newpage
+ \begin{tw}
+   \begin{equation*}
+   \lim_{n\to\infty} 2^{n}\sin{\frac{\pi}{2^n}} = \pi
+ \end{equation*}
+   \begin{proof}
+    Łatwo zauważyć, że skoro \(\lim_{x\to 0} \frac{\sin{x}}{x} = \lim_{x \to 0} \frac{\cos{x}}{1} = 1\), to
+    \begin{equation*}
+    \begin{split}
+    \lim_{n\to\infty} 2^{n}\sin{\frac{\pi}{2^n}} = \lim_{n\to\infty} \pi \cdot \frac{\sin{\frac{\pi}{2^n}}}{\frac{\pi}{2^{n}}} = \pi \cdot \lim_{x\to 0} \frac{\sin{x}}{x} = \pi
+    \end{split}
+    \end{equation*}
+    bowiem \(\frac{\pi}{2^n} \stackrel{n\to\infty}{\to} 0\)
+   \end{proof}
+ \end{tw}
+ Udowodnijmy też jedną prostą tożsamość trygonometryczną, którą wykorzystamy przy dowodzie wzorów rekurencyjnych.
+ \begin{lemat}
+   \begin{equation*}
+   2\sin^2{\frac{x}{2}} = 1 - \cos{x}
+ \end{equation*}
+ \begin{proof}
+   Wiemy, że \(cos(2x) = \cos^2{x} - \sin^2{x} = (\cos^2{x} + \sin^2{x}) - 2\sin^2{x} = 1 - 2\sin^2{x} \). W takim razie \(2\sin^2{x} = 1 - \cos(2x)\). Po położeniu \(x := x/2\) otrzymujemy wprost tezę.
+\end{proof}
+\end{lemat}
+
+
+ \section{Dowody wzorów rekurencyjnych.}
+ \begin{tw}
+  Gdy ciąg \(x_k\) jest dany wzorem ogólnym \( x_k := 2^{k}\sin\frac{\pi}{2^k} \), to spełnia on nastpujące równanie rekurencyjne dla warunku początkowego \( x_1 = 2\)
+  \begin{equation}
+  x_{k+1} = 2^{k}\sqrt{2\Big(1 - \sqrt{1 - (x_{k}/2^{k})^2}\Big)}
+  \end{equation}
+  \begin{proof}
+    Przeprowadzimy dowód indukcyjny względem k.
+    Baza indukcji jest prosta do pokazania, bowiem \( x_1 = 2^1 \sin(\pi/2^1) = 2 \).
+    Załóżmy więc, że wzór (1) jest prawdziwy dla \(x_k \), udowodnimy go dla \(x_{k+1} \).
+    Uprośćmy prawą stronę równania (1) wykorzystując założenie indukcyjne oraz Lemat 1:
+    \begin{equation*}
+    \begin{split}
+    2^{k}\sqrt{2\Bigg(1 - \sqrt{1 - \Big(\frac{2^{k}\sin(\frac{\pi}{2^{k}})}{2^{k}}\Big)^2}\Bigg)} = 2^{k}\sqrt{2\Bigg(1 - \sqrt{ 1 - \sin^2\Big(\frac{\pi}{2^{k}}\Big)}\Bigg)} = \\
+    = 2^k\sqrt{2\Big(1 - \cos{\frac{\pi}{2^k}}\Big)} = 2^k\sqrt{4\sin^2{\frac{\pi}{2^{k+1}}}} = 2^{k+1}\sqrt{\sin^2{\frac{\pi}{2^{k+1}}}}
+    \end{split}
+    \end{equation*}
+    a skoro \( 0 < \frac{\pi}{2^{k+1}} < \pi \) dla każdego \( k > 0 \) to wnioskujemy
+    \begin{equation*}
+    \sqrt{\sin^2{\frac{\pi}{2^{k+1}}}} = \sin{\frac{\pi}{2^{k+1}}}
+    \end{equation*}
+    czyli prawa strona to \(2^{k+1}\sin{\frac{\pi}{2^{k+1}}} = x_{k+1} \), co kończy dowód.
+  \end{proof}
+ \end{tw}
+ \begin{tw}
+Gdy ciąg \(x_k\) jest dany wzorem ogólnym \( x_k := 2^{k}\sin\frac{\pi}{2^k} \), to spełnia on nastpujące równanie rekurencyjne dla warunku początkowego \( x_1 = 2\)
+  \begin{equation}
+  x_{k+1} = \frac{2x_k}{\sqrt{2\big(1 + \sqrt{1 - (x_k/2^k)^2}\big)}}
+  \end{equation}
+  \begin{proof}
+    Wykorzystamy twierdzenie 1. Zauważmy:
+    \begin{equation*}
+    \begin{split}
+    x_{k+1} & = 2^{k}\sqrt{2(1 - \sqrt{1 - (x_{k}/2^{k})^2})} \cdot \frac{\sqrt{1 + \sqrt{1 - (x_{k}/2^{k})^2}}}{\sqrt{1 + \sqrt{1 - (x_{k}/2^{k})^2}}} = \\
+    & = 2^{k}\cdot \sqrt{2} \cdot \frac{\sqrt{1^2 - \sqrt{1 - (x_{k}/2^{k})^2}^2}}{\sqrt{1 + \sqrt{1 - (x_{k}/2^{k})^2}}} = 2^{k} \cdot\frac{2}{\sqrt{2}} \cdot\frac{\sqrt{x_{k}/2^{k}}^2}{\sqrt{1 + \sqrt{1 - (x_{k}/2^{k})^2}}} = \\
+    & = \frac{2^k \cdot 2 \cdot \frac{1}{2^k} \cdot x_k}{\sqrt{2}\sqrt{1 + \sqrt{1 - (x_{k}/2^{k})^2}}} = \frac{2x_k}{\sqrt{2\big(1 + \sqrt{1 - (x_k/2^k)^2}\big)}}.
+    \end{split}
+    \end{equation*}
+  \end{proof}
+\end{tw}
+
+ \begin{tw}
+  Gdy ciąg \(x_k\) jest dany wzorem ogólnym \( x_k := 2^{k}\sin\frac{\pi}{2^k} \), to spełnia on nastpujące równanie rekurencyjne dla warunków początkowych \( x_1 = 2, x_2 = 2\sqrt{2}\)
+  \begin{equation}
+  x_{k+1} = x_k \sqrt{\frac{2x_k}{x_k + x_{k-1}}}
+\end{equation}
+  \begin{proof}
+    Oczywiście łatwo sprawdzić, że ciąg \(\{x_k\}\) spełnia warunki początkowe.
+    Wykorzystamy teraz twierdzenie 2.
+    \begin{equation*}
+    \begin{split}
+      x_{k+1} = \frac{2x_k}{\sqrt{2\big(1 + \sqrt{1 - (x_k/2^k)^2}\big)}} = x_{k} \cdot \sqrt{\frac{4}{2\big(1 + \sqrt{1 - (x_k/2^k)^2}\big)}} = \\
+      = x_{k}\sqrt{\frac{2x_k}{x_k\big(1 + \sqrt{1 - (x_k/2^k)^2}\big)}} = x_{k}\sqrt{\frac{2x_k}{x_k + x_k\sqrt{1 - (x_k/2^k)^2}}}.
+    \end{split}
+    \end{equation*}
+    Pozostaje więc wykazać, że \(x_k\sqrt{1 - (x_k/2^k)^2} = x_{k-1}\) co jest równoważne pokazaniu tożsamości \(2^{k}\sqrt{1 - (\frac{2^{k}\sin{\pi/2^k}}{2^k})^2} = 2^{k-1}\sin{\frac{\pi}{2^{k-1}}}\). Uprośćmy lewą stronę:
+    \begin{equation*}
+    \begin{split}
+      2^{k}\sin\frac{\pi}{2^k}\sqrt{1 - (\frac{2^{k}\sin{\pi/2^k}}{2^k})^2} = 2^{k}\sin\frac{\pi}{2^k}\sqrt{1 - sin{\frac{\pi}{2^k}}^2} = \\
+      = 2^{k}\sin\frac{\pi}{2^k}\cos\frac{\pi}{2^k} = 2^k\frac{\sin{(2 \cdot \frac{\pi}{2^k}})}{2} = 2^{k-1}\sin{\frac{\pi}{2^{k-1}}},
+    \end{split}
+    \end{equation*}
+    co kończy dowód.
+  \end{proof}
+\end{tw}
+
+\section{Propagacja błędów w wykorzystanych wzorach.}
+Sprawdzimy jaki błąd może pojawić się przy obliczeniach kolejnych wyrazów ciągu \(x_k\).
+
+\begin{uw}
+  Uznajemy, że w arytmetyce \emph{fl} działania wykonują się z błędem rzędu precyzji arytmetyki. Dokładniej mówiąc zachodzi
+  $$fl(\bar{a} \circ \bar{b}) = (\bar{a} \circ \bar{b})(1+ \epsilon),$$ dla \(\circ \in \{+, -, *, /\}\) gdzie \(|\epsilon| \leq u\), a liczbę \(u := 2^{-t-1}\) nazywamy precyzją arytmetyki.
+  Analogicznie też zachodzi $$fl(\sqrt{\bar{a}}) = \sqrt{\bar{a}}(1+ \epsilon).$$
+\end{uw}
+Zauważmy, że w naszym modelu liczba \(2^k\) oblicza się dokładnie
+oraz mnożenie przez potęgę dowolną (całkowitą) potęgę dwójki także nie powoduje błędu,
+gdyż polega tylko na zmianie cechy drugiego czynnika - mantysa pozostaje bez zmian.
+\begin{uw}
+  Przez relację \(a \lesssim b\) będziemy rozumieć relację \(a \underset{1}{\leqslant} b\) określoną w \cite{JMJ}, s. 15-16.
+  Dla propagacji (nagromadzenia) błędów zachodzi następujący wzór:
+  \begin{equation*}
+    \prod_{i=1}^{n} (1 + \epsilon_i)^{k_i} = 1 + \eta,
+  \end{equation*}
+  gdzie dla \(k_i \in \{-1,1\}\) zachodzi \(|\eta| \lesssim nu \).
+    \par Szkic dowodu jest taki, że nierówność $$  1 - nu \leq \prod_{i=1}^{n} (1 + \epsilon_i)^{k_i} \leq 1 + \frac{nu}{1-nu} = \frac{1}{1 - nu} $$
+    wynika wprost z nierówności Bernoulliego, gdzie wiemy, że skoro $$ 1 - u < \frac{1}{1+u} < 1 + \epsilon_i < 1 + u <\frac{1}{1-u} $$
+    to  $$ 1 - nu < (1 - u)^n < \Big(\frac{1}{1+u}\Big)^n < \prod_{i=1}^{n} (1 + \epsilon_i)^{k_i} < (1 + u)^n < \Big(\frac{1}{1-u}\Big)^n < \frac{1}{1-nu} $$
+    \\
+  Oprócz tego zachodzi także prosta do zaobserwowania zależność, że \(\sqrt{1+\epsilon} = 1 + \gamma\), gdzie \(|\gamma| \lesssim \frac{1}{2}u \).
+\end{uw}
+\subsection{Błędy między kolejnymi iteracjami we wzorze (1).}
+Zauważmy, że w tej formule może wystąpić problem utraty cyfr znaczących ze względu na odejmowanie bliskich sobie liczb.\footnote{
+Oprócz tego może pojawić się inny problem -
+liczba \(2^k\) dla odpowiednio dużych k musi przekroczyć zakres arytmetyki, którą się posługujemy, co może spowodować wyniki pokroju \(NaN\) czy \(Inf\).}
+\begin{equation*}
+\begin{split}
+fl(x_{k+1}) & = fl\Bigg( 2^{k}\sqrt{2\Big(1 - \sqrt{1 - (\bar{x}_{k}/2^{k})^2}\Big)} \Bigg) = \\ & = 2^{k}\sqrt{2\Bigg(1 - \sqrt{\bigg(1 - \Big(\frac{\bar{x}_{k}}{2^{k}}\Big)^2(1+\epsilon_4)\bigg)(1+\epsilon_3)}\Bigg)(1 + \epsilon_2)}(1+\epsilon_1) \\
+& = 2^{k}\sqrt{2\Bigg(1 - \sqrt{\bigg(1 - \Big(\frac{\bar{\bar{x}}_{k}}{2^{k}}\Big)^2\bigg)}(1+\eta_2)\Bigg)}(1+\eta_1)
+\end{split}
+\end{equation*}
+  Gdzie \(|\epsilon_i| \leq u \) dla \(i = 1,...,4\), gdzie \(\epsilon_1\) pochodzi z pierwiastkowania, \(\epsilon_{2,3}\) - odejmowania, \(\epsilon_4\) - podniesienia do potęgi drugiej (albo prościej - mnożenia).
+  Oraz przyjmijmy, że \( 1 + \eta_1 = \sqrt{1 + \epsilon_2}(1+\epsilon_1)\),\(1 + \eta_2 = \sqrt{1+\epsilon_3}\), \(\bar{\bar{x}}_k = \bar{x}_k(1+\eta_3) = \bar{x}_k\sqrt{1+\epsilon_4}\).
+  Wtedy łatwo zauważyć, że \(|\eta_1| \lesssim (1 + 1/2)u = \frac{3}{2}u\), \(|\eta_2| \lesssim \frac{1}{2}u\) oraz \(|\eta_3| \lesssim \frac{1}{2}u\)
+  \\ Dla przejrzystości obliczeń półóżmy chwilowo \(T := 1 - \Big(\bar{\bar{x}}_k/2^k\Big)^2 \)
+  \begin{equation*}
+  \begin{split}
+  fl(x_{k+1}) & = 2^{k}\sqrt{2\Bigg(1 - \sqrt{T}(1+\eta_2)\Bigg)}(1+\eta_1) \\
+  & = 2^{k}\sqrt{2\bigg(1 - \sqrt{T}\bigg)\bigg(1 - \frac{\eta_2\sqrt{T}}{1 - \sqrt{T}}\bigg)}(1+\eta_1) \\
+  & = 2^k\sqrt{2\bigg(1-\sqrt{T}\bigg)} \cdot \sqrt{1 - \frac{\eta_2\sqrt{T}}{1 - \sqrt{T}}}(1+\eta_1) \\
+  & = 2^k\sqrt{2\bigg(1-\sqrt{1 - \Big(\bar{\bar{x}}_k/2^k\Big)^2}\bigg)}\cdot(1 + \eta_4)
+  \end{split}
+  \end{equation*}
+  Gdzie \(1 + \eta_4 = \sqrt{1 - \frac{\eta_2\sqrt{T}}{1 - \sqrt{T}}}(1+\eta_1) = \sqrt{1 - \frac{\eta_2\sqrt{1 - \Big(\bar{\bar{x}}_k/2^k\Big)^2}}{1 - \sqrt{1 - \Big(\bar{\bar{x}}_k/2^k\Big)^2}}}(1+\eta_1) \).\\
+  W takim razie $$ |\eta_4| \lesssim (\frac{3}{2} + \frac{\frac{1}{2}\cdot\frac{1}{2}\cdot\sqrt{T}}{1 - \sqrt{T}})u = (\frac{3}{2} + \frac{\frac{1}{4}}{\frac{1}{\sqrt{T}} - 1})u $$ \\
+  Zakładając, że do pewnego momentu ciąg \(\bar{\bar{x}}_k\) jest ograniczony przez jakąś małą stałą, otrzymujemy,
+  że dla odpowiednio dużego \(k\) wyrażenie \(\frac{\bar{\bar{x}}_k}{2^k}\) jest dowolnie blisko zera,
+  więc wyrażenie \(\frac{1}{\sqrt{T}} - 1 = \frac{1}{\sqrt{1 - \Big(\bar{\bar{x}}_k/2^k\Big)^2}} - 1\) jest dowolnie blisko zera.
+  Z tego łatwo wywnioskować, że gdy \(2^k \gg \bar{\bar{x}}_k \), to błąd \(\eta_4\) jest dowolnie duży.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Błędy między kolejnymi iteracjami we wzorze (2).}
+Zauważmy, że ta formuła nie zawiera odejmowania bliskich sobie liczb, więc zjawisko utraty cyfr znaczących nie powinno wystąpić.
+\begin{equation*}
+\begin{split}
+fl(x_{k+1}) & = fl\Bigg(\frac{2x_k}{\sqrt{2\big(1 + \sqrt{1 - (x_k/2^k)^2}\big)}}\Bigg) \\
+& = \frac{2\bar{x}_k}{\sqrt{2\Bigg(1+\sqrt{\Big(1-\big(\frac{\bar{x}_k}{2^k}\big)^2(1+\epsilon_5)\Big)(1+\epsilon_4)}\Bigg)(1+\epsilon_3)}(1+\epsilon_2)}(1+\epsilon_1) \\
+& = \frac{2\bar{\bar{x}}_k\frac{1}{1 + \eta_2}}{\sqrt{2\bigg(1+\sqrt{(1-(\frac{\bar{\bar{x}}_k}{2^k})^2)(1+\epsilon_4)}\bigg)}}(1+\eta_1)\\
+& = \frac{2\bar{\bar{x}}_k}{\sqrt{2\bigg(1+\sqrt{1-(\frac{\bar{\bar{x}}_k}{2^k})^2}(1+\eta_3)\bigg)}}\frac{1+\eta_1}{1+\eta_2}
+\end{split}
+\end{equation*}
+Gdzie \(|\epsilon_i| \leq u \) dla \(i = 1,...,5\), gdzie \(\epsilon_1\) pochodzi z działania dzielenia,
+\(\epsilon_2\) - pierwiastkowania,\(\epsilon_{3}\) - dodawania, \(\epsilon_{4}\) - odejmowania,
+\(\epsilon_5\) - podniesienia do potęgi drugiej.
+\\
+Niech \( 1 + \eta_1 = \frac{(1+\epsilon_1)}{(1+\epsilon_2)\sqrt{1+\epsilon_3}} \)
+oraz \(\bar{\bar{x}}_k = \bar{x}_k(1+\eta_2) = \bar{x}_k\sqrt{1+\epsilon_5}\)
+oraz \(1 + \eta_3 = \sqrt{1 + \epsilon_4}\).
+\\
+W takim razie \(|\eta_1| \lesssim (1 + 1 + 1/2)u = \frac{5}{2}u\), \(|\eta_2| \lesssim (1/2)u = \frac{1}{2}u\) oraz \(|\eta_3| \lesssim (1/2)u = \frac{1}{2}u\).
+Niech \( 1 + \delta_1 = \frac{1+\eta_1}{1+\eta_2}\), a więc \(|\delta_1| \lesssim (5/2 + 1/2)u = 3u\)
+Dla przejrzystości obliczeń półóżmy chwilowo \(T := 1 - \Big(\bar{\bar{x}}_k/2^k\Big)^2 \)
+\begin{equation*}
+\begin{split}
+  fl(x_{k+1}) & = \frac{2\bar{\bar{x}}_k}{\sqrt{2\bigg(1+\sqrt{T}(1+\eta_3)\bigg)}}(1+\delta_1) \\
+  & = \frac{2\bar{\bar{x}}_k}{\sqrt{2\bigg((1+\sqrt{T})(1+\frac{\eta_3\sqrt{T}}{1 + \sqrt{T}})\bigg)}}(1+\delta_1) \\
+  & = \frac{2\bar{\bar{x}}_k}{\sqrt{2\big(1+\sqrt{T}\big)}}\frac{1+\delta_1}{\sqrt{1+\frac{\eta_3\sqrt{T}}{1 + \sqrt{T}}}} \\
+  & = \frac{2\bar{\bar{x}}_k}{\sqrt{2\big(1+\sqrt{1 - \Big(\bar{\bar{x}}_k/2^k\Big)^2}\big)}} \cdot (1 + \gamma),
+\end{split}
+\end{equation*}
+gdzie $$ 1 + \gamma = \frac{1+\delta_1}{\sqrt{1+\frac{\eta_3\sqrt{T}}{1 + \sqrt{T}}}}, $$ a więc znowu $$|\gamma| \lesssim (\frac{1}{2}\frac{\frac{1}{2}\sqrt{T}}{1 + \sqrt{T}} + 3)u \leq (3 + 1/4)u.$$
+%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Błędy między kolejnymi iteracjami we wzorze (3).}
+Zauważmy, że w tym wzorze wykonujemy relatywnie mało operacji w porównaniu do wzorów (2) i (3).
+Wykorzystujemy pierwiastkowanie tylko raz oraz nie ma odejmowania liczb tych samych rzędów, więc nie powinno wystąpić zjawisko utraty cyfr znaczących.
+\begin{equation*}
+\begin{split}
+fl(x_{k+1}) & = fl\bigg( x_k\sqrt{\frac{2x_k}{x_k + x_{k+1}}} \bigg) \\
+& = \bar{x}_k\sqrt{\frac{2\bar{x}_k}{(\bar{x}_k + \bar{x}_{k+1})(1 + \epsilon_4)}(1+\epsilon_3)} (1 + \epsilon_1) (1 + \epsilon_2) \\
+& = \bar{x}_k\sqrt{\frac{2\bar{x}_k}{\bar{x}_k + \bar{x}_{k+1}}}\sqrt{\frac{1 + \epsilon_3}{1 + \epsilon_4}}(1 + \epsilon_1) (1 + \epsilon_2) \\
+& = \bar{x}_k\sqrt{\frac{2\bar{x}_k}{\bar{x}_k + \bar{x}_{k+1}}}(1 + \eta)
+\end{split}
+\end{equation*}
+Gdzie błędy \(|\epsilon_i| \leq u \) dla \(i = 1,...,4\) oraz \(\epsilon_1\) jest błędem zaokrąglenia powstałym podczas mnożenia, \(\epsilon_2\) - pierwiastkowania, \(\epsilon_3\) - dzielenia, \(\epsilon_4\) - dodawania.
+Oznaczmy w takim razie \( 1 + \eta = \sqrt{\frac{1 + \epsilon_3}{1 + \epsilon_4}}(1 + \epsilon_1) (1 + \epsilon_2) \)\\
+Skoro \( |\epsilon_i | \leq u \) to \(|\eta| \lesssim (1/2 + 1/2 + 1 + 1 ) u = 3u \)
+
+\section{Testy empiryczne wzorów (1), (2) oraz (3) i obserwacje.}
+Dla każdego ze wzorów obliczymy najpierw pierwsze 50 wyrazów wykorzystując arytmetykę pojedynczej
+i podwójnej precyzji. Wykorzystujamy do tego, odpowiednio, typy \(Float32\) i \(Float64\) dostępne w Julii.
+Obliczymy też odpowiadające im błędy względne przybliżenia wykorzystując arytmetykę wysokiej precyzji - w naszym wypadku ustalimy arytmetykę
+256-bitową, reprezentowaną w Julii przez typ \(BigFloat\), oraz stałą \(pi\) typu \(Irrational\) również dostępną w Julii.
+\subsection{Testy wzoru (1), błędy względne wyników oraz komentarz.}
+\begin{minipage}[t]{0.5\textwidth}
+  \begin{tabular}{|c|c|c|} \hline
+    \(i\) & Pojedyncza precyzja & Błąd \\ \hline
+    1 & 2.000000000000000000000000 & 3.6338e-01 \\ \hline
+    2 & 2.828427076339721679687500 & 9.9684e-02 \\ \hline
+    3 & 3.061467409133911132812500 & 2.5505e-02 \\ \hline
+    4 & 3.121444463729858398437500 & 6.4134e-03 \\ \hline
+    5 & 3.136546134948730468750000 & 1.6064e-03 \\ \hline
+    6 & 3.140333414077758789062500 & 4.0083e-04 \\ \hline
+    7 & 3.141285657882690429687500 & 9.7720e-05 \\ \hline
+    8 & 3.141518831253051757812500 & 2.3498e-05 \\ \hline
+    9 & 3.141207933425903320312500 & 1.2246e-04 \\ \hline
+    10 & 3.142451286315917968750000 & 2.7331e-04 \\ \hline
+    11 & 3.142451286315917968750000 & 2.7331e-04 \\ \hline
+    12 & 3.162277698516845703125000 & 6.5843e-03 \\ \hline
+    13 & 3.162277698516845703125000 & 6.5843e-03 \\ \hline
+    14 & 2.828427076339721679687500 & 9.9684e-02 \\ \hline
+    15 & 0.000000000000000000000000 & 1.0000e+00 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    50 & 0.000000000000000000000000 & 1.0000e+00 \\ \hline
+  \end{tabular}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+  \begin{tabular}{|c||c|c||} \hline
+    \(i\) & Podwójna precyzja & Błąd \\ \hline
+    1 & 2.000000000000000000000000 & 3.6338e-01 \\ \hline
+    2 & 2.828427124746190290949244 & 9.9684e-02 \\ \hline
+    3 & 3.061467458920718698323071 & 2.5505e-02 \\ \hline
+    4 & 3.121445152258052857519033 & 6.4131e-03 \\ \hline
+    5 & 3.136548490545940648388523 & 1.6056e-03 \\ \hline
+    6 & 3.140331156954739189046677 & 4.0155e-04 \\ \hline
+    7 & 3.141277250932756892609632 & 1.0040e-04 \\ \hline
+    8 & 3.141513801144145467958424 & 2.5100e-05 \\ \hline
+    9 & 3.141572940367882704748581 & 6.2749e-06 \\ \hline
+    10 & 3.141587725279960885416131 & 1.5687e-06 \\ \hline
+    11 & 3.141591421504635217587520 & 3.9218e-07 \\ \hline
+    12 & 3.141592345611076808609141 & 9.8033e-08 \\ \hline
+    13 & 3.141592576545004344978906 & 2.4524e-08 \\ \hline
+    14 & 3.141592633463248240843768 & 6.4065e-09 \\ \hline
+    15 & 3.141592654807589202192730 & 3.8764e-10 \\ \hline
+    16 & 3.141592645321215293563455 & 2.6320e-09 \\ \hline
+    17 & 3.141592607375719659046354 & 1.4710e-08 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    25 & 3.142451272494133807100525 & 2.7331e-04 \\ \hline
+    26 & 3.162277660168379522787063 & 6.5842e-03 \\ \hline
+    27 & 3.162277660168379522787063 & 6.5842e-03 \\ \hline
+    28 & 3.464101615137754386353208 & 1.0266e-01 \\ \hline
+    29 & 4.000000000000000000000000 & 2.7324e-01 \\ \hline
+    30 & 0.000000000000000000000000 & 1.0000e+00 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    49 & 0.000000000000000000000000 & 1.0000e+00 \\ \hline
+    50 & 0.000000000000000000000000 & 1.0000e+00 \\ \hline
+  \end{tabular}
+\end{minipage}
+\\
+\par Możemy zauważyć, że w przypadku obliczeń z pojedynczą precyzją nie mamy szans na stabilizację wyniku.
+Nie mamy też szans osiągnąć więcej niż 5 dokładnych cyfr rozwinięcia dziesiętnego - najdokładniejsze z nich, \(x_8\) osiąga 5 cyfr dokładnych i ma błąd względny rzędu \(10^{-5}\) co jest dość dużą wartością.
+W przypadku obliczeń wykorzystujących arytmetykę z podwójną precyzją także nie mamy szans na stabilizację wyniku, ale możemy zdecydowanie dokładniej obliczyć \(\pi\)
+- wynik mający pięć początkowych cyfr dokładnych otrzymujemy dla \(x_8\), a osiem cyfr dokładnych dla \(x_{15}\).
+\par Tak jak przewidywaliśmy przy oszacowaniu błędu między kolejnymi iteracjami, występuje zjawisko utraty cyfr znaczących przy obliczaniu kolejnych wyrazów.
+Obliczenia z wykorzystaniem wzoru (1) psują się dla odpowiednio dużego \(i\) niezależnie od wyboru precyzji arytmetyki.
+Przykładowo, dla arytmetyki 256-bitowej, psuje się wyraz \(x_{131}\), a dla 512-bitowej - \(x_{260}\). Wynik nie stabilizuje się w okolicy liczby \(\pi\),
+a najlepszymi przybliżeniami ludolfiny jest \(x_8\) dla pojedynczej precyzji oraz \(x_{15}\) dla podwójnej precyzji.
+\subsection{Testy wzoru (2), błędy względne wyników oraz komentarz do wyników.}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{tabular}{|c|c|c|} \hline
+    \(i\) & Pojedyncza precyzja & Błąd \\ \hline
+    1 & 2.000000000000000000000000 & 3.6338e-01 \\ \hline
+    2 & 2.828427076339721679687500 & 9.9684e-02 \\ \hline
+    3 & 3.061467409133911132812500 & 2.5505e-02 \\ \hline
+    4 & 3.121444940567016601562500 & 6.4132e-03 \\ \hline
+    5 & 3.136548280715942382812500 & 1.6057e-03 \\ \hline
+    6 & 3.140331029891967773437500 & 4.0159e-04 \\ \hline
+    7 & 3.141277074813842773437500 & 1.0045e-04 \\ \hline
+    8 & 3.141513586044311523437500 & 2.5168e-05 \\ \hline
+    9 & 3.141572713851928710937500 & 6.3470e-06 \\ \hline
+    10 & 3.141587495803833007812500 & 1.6418e-06 \\ \hline
+    11 & 3.141591310501098632812500 & 4.2752e-07 \\ \hline
+    12 & 3.141592264175415039062500 & 1.2395e-07 \\ \hline
+    13 & 3.141592502593994140625000 & 4.8063e-08 \\ \hline
+    14 & 3.141592502593994140625000 & 4.8063e-08 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    49 & 3.141592502593994140625000 & 4.8063e-08 \\ \hline
+    50 & 3.141592502593994140625000 & 4.8063e-08 \\ \hline
+  \end{tabular}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+  \begin{tabular}{|c||c|c||} \hline
+    \(i\) & Podwójna precyzja & Błąd  \\ \hline
+    1 & 2.000000000000000000000000 & 3.6338e-01 \\ \hline
+    2 & 2.828427124746189846860034 & 9.9684e-02 \\ \hline
+    3 & 3.061467458920717810144652 & 2.5505e-02 \\ \hline
+    4 & 3.121445152258051969340613 & 6.4131e-03 \\ \hline
+    5 & 3.136548490545938872031684 & 1.6056e-03 \\ \hline
+    6 & 3.140331156954752511722972 & 4.0155e-04 \\ \hline
+    7 & 3.141277250932772435731977 & 1.0040e-04 \\ \hline
+    8 & 3.141513801144300899181872 & 2.5100e-05 \\ \hline
+    9 & 3.141572940367091337776628 & 6.2749e-06 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    13 & 3.141592576584872453793196 & 2.4511e-08 \\ \hline
+    14 & 3.141592634338563172491376 & 6.1279e-09 \\ \hline
+    15 & 3.141592648776985630121317 & 1.5320e-09 \\ \hline
+    16 & 3.141592652386591133506499 & 3.8299e-10 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    24 & 3.141592653589775796518779 & 5.5519e-15 \\ \hline
+    25 & 3.141592653589789563284285 & 1.1698e-15 \\ \hline
+    26 & 3.141592653589793115997963 & 3.8982e-17 \\ \hline
+    27 & 3.141592653589794004176383 & 2.4373e-16 \\ \hline
+    28 & 3.141592653589794448265593 & 3.8509e-16 \\ \hline
+    \multicolumn{3}{|c|}{...}\\ \hline
+    49 & 3.141592653589794448265593 & 3.8509e-16 \\ \hline
+    50 & 3.141592653589794448265593 & 3.8509e-16 \\ \hline
+  \end{tabular}
+\end{minipage}
+\\
+\par Możemy zauważyć, że formuła (2) jest zdecydowanie lepsza od formuły (1) -
+dla pojedynczej precyzji wynik stabilizuje się dla 7 początkowych cyfr dokładnych, dla podwójnej -
+dla 15 cyfr. W obu precyzjach, stabilizację dla 5 cyfr początkowych osiągamy dla wyrazu \(x_{8}\), a dla podwójnej precyzji, stabilizację 8 cyfr początkowych - przy wyrazie \(x_{14}\).
+\par Tak jak przewidywaliśmy przy propagacji błędu między kolejnymi iteracjami,
+błędy są rzędów odpowiednio \(10^{-8} \approx 2^{-26}\) oraz \(10^{-16} \approx 2^{-53}\) i są na poziomie błędu reprezentacji liczby.
+\subsection{Testy wzoru (3), błędy względne wyników oraz komentarz do wyników.}
+\begin{minipage}[t]{0.5\textwidth}
+
+  \begin{tabular}{|c|c|c|} \hline
+    \(i\) & Pojedyncza precyzja & Błąd \\ \hline
+    1 & 2.000000000000000000000000 & 3.6338e-01 \\ \hline
+    2 & 2.828427076339721679687500 & 9.9684e-02 \\ \hline
+    3 & 3.061467409133911132812500 & 2.5505e-02 \\ \hline
+    4 & 3.121445178985595703125000 & 6.4131e-03 \\ \hline
+    5 & 3.136548519134521484375000 & 1.6056e-03 \\ \hline
+    6 & 3.140331029891967773437500 & 4.0159e-04 \\ \hline
+    7 & 3.141277074813842773437500 & 1.0045e-04 \\ \hline
+    8 & 3.141513347625732421875000 & 2.5244e-05 \\ \hline
+    9 & 3.141572475433349609375000 & 6.4229e-06 \\ \hline
+    10 & 3.141587018966674804687500 & 1.7936e-06 \\ \hline
+    11 & 3.141590833663940429687500 & 5.7930e-07 \\ \hline
+    12 & 3.141591548919677734375000 & 3.5163e-07 \\ \hline
+    13 & 3.141591548919677734375000 & 3.5163e-07 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    49 & 3.141591548919677734375000 & 3.5163e-07 \\ \hline
+    50 & 3.141591548919677734375000 & 3.5163e-07 \\ \hline
+  \end{tabular}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+  \begin{tabular}{|c||c|c||} \hline
+    \(i\) & Podwójna precyzja & Błąd \\ \hline
+    1 & 2.000000000000000000000000 & 3.6338e-01 \\ \hline
+    2 & 2.828427124746190290949244 & 9.9684e-02 \\ \hline
+    3 & 3.061467458920718698323071 & 2.5505e-02 \\ \hline
+    4 & 3.121445152258052857519033 & 6.4131e-03 \\ \hline
+    5 & 3.136548490545939760210103 & 1.6056e-03 \\ \hline
+    6 & 3.140331156954753399901392 & 4.0155e-04 \\ \hline
+    7 & 3.141277250932773323910396 & 1.0040e-04 \\ \hline
+    8 & 3.141513801144301343271081 & 2.5100e-05 \\ \hline
+    9 & 3.141572940367091337776628 & 6.2749e-06 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    13 & 3.141592576584872453793196 & 2.4511e-08 \\ \hline
+    14 & 3.141592634338563172491376 & 6.1279e-09 \\ \hline
+    15 & 3.141592648776986074210527 & 1.5320e-09 \\ \hline
+    16 & 3.141592652386591577595709 & 3.8299e-10 \\ \hline
+    \multicolumn{3}{|c|}{...} \\ \hline
+    24 & 3.141592653589775352429569 & 5.6933e-15 \\ \hline
+    25 & 3.141592653589788675105865 & 1.4526e-15 \\ \hline
+    26 & 3.141592653589792227819544 & 3.2170e-16 \\ \hline
+    27 & 3.141592653589793115997963 & 3.8982e-17 \\ \hline
+    28 & 3.141592653589793115997963 & 3.8982e-17 \\ \hline
+    \multicolumn{3}{|c|}{...}\\ \hline
+    49 & 3.141592653589793115997963 & 3.8982e-17 \\ \hline
+    50 & 3.141592653589793115997963 & 3.8982e-17 \\ \hline
+  \end{tabular}
+\end{minipage}
+\par Możemy zauważyć, że wzór (3) jest nieco lepszy od wzoru (2). Oczywiście zbieżność musi być taka sama, bo obliczamy przybliżenia wyrazów tego samego ciągu.
+Wyniki obliczeń dla pojedynczej i podwójnej precyzji są bardzo podobne jak wyniki dla wzoru (2).
+Tutaj, w przypadku podwójnej precyzji na korzyść wzoru (3), ponieważ dostajemy jeszcze jedną cyfrę znaczącą rozwinięcia dziesiętnego, chociaż dla arytmetyk wyższych precyzji różnica ta nie jest zauważalna.
+Tak jak poprzednio stabilizację dla 5 cyfr początkowych osiągamy dla wyrazu \(x_{8}\), a dla 8 cyfr początkowych - przy wyrazie \(x_{14}\).
+Plusem tego wzoru jest zdecydowanie fakt, że wykonujemy o wiele mniej działań w porównaniu do wzoru (2).
+\par Tak jak przewidywaliśmy przy propagacji błędu między kolejnymi iteracjami,
+błędy są rzędów odpowiednio \(10^{-7} \approx 2^{-23}\) oraz \(10^{-17} \approx 2^{-56}\) i są na poziomie błędu reprezentacji liczby.
+\section{Wykładnik zbieżności.}
+Łatwo zauważyć, że błąd między liczbą \(\pi\), a naszymi przybliżeniami osiąganymi przy wzorach (1), (2) i (3) zmniejsza się o jeden rząd co około 2 iteracje.  Spróbujmy więc znaleźć wykładnik zbieżności naszej metody.
+\begin{fc}
+  Niech \(x_n\) będzie ciągiem zbieżnym do pewnej stałej. Wtedy
+  \begin{equation*}
+    \begin{split}
+      q \approx \frac{\log{|\frac{x_{n+1} - x_n}{x_n - x_{n-1}}|}}{\log{|\frac{x_n - x_{n-1}}{x_{n-1} - x_{n-2}}|}}
+    \end{split}
+  \end{equation*}
+  gdzie \(q\) to wykładnik zbieżności.
+\end{fc}
+Skoro wszystkie ciągi rekurencyjne mają za zadanie przybliżyć wyrażenie \(x_k = 2^{k}\sin{\pi/2^k}\) to w takim razie wzory (1), (2) oraz (3) są zbieżne tak samo szybko.
+Poszukamy więc wykładnika zbieżności wykorzystując wzór (3).
+\\
+\includegraphics[scale=0.7]{rate_of_conv1.png}
+\captionof{figure}{Wartości \(q_n\) dla \(n = 3,...,50\)}
+Na tej podstawie możemy przewidywać, że zbieżność jest liniowa, sprawdźmy wartości ciągu \(\frac{|x_{n+1} - \pi|}{|x_n - \pi|}\) - jeśli zbiega on do stałej z przedziału \((0,1)\) to zbieżność rzeczywiście jest liniowa.
+\\
+\includegraphics[scale=0.7]{rate_of_conv2.png}
+\captionof{figure}{Wartości \(\frac{|x_{n+1} - \pi|}{|x_n - \pi|}\) dla \(n = 1,...,50\)}
+W takim razie możemy przewidywać, że \begin{equation*}\lim_{n\to\infty} \frac{|x_{n+1} - \pi|}{|x_n - \pi|} = 1/4.\end{equation*} \\
+Spróbujmy więc udowodnić następujące twierdzenie:
+\begin{tw}
+  \begin{equation*}
+    \lim_{n\to\infty} \frac{|2^{n+1}\sin{\pi/2^{n+1}} - \pi|}{|2^{n}\sin{\pi/2^{n}} - \pi|} = \frac{1}{4}
+  \end{equation*}
+  \begin{proof}
+    Wykorzystując rachunek pochodnych łatwo możemy sprawdzić, że \(f(x) = x - \sin{x} > 0\), gdy \(x > 0\). W takim razie, kładąc \(x:= \pi/2^k\) otrzymujemy, że \(\frac{\pi}{2^k} > \sin{\pi/2^k} \), a więc \(\pi > 2^k\sin{\pi/2^k} \).
+    W takim razie
+    \begin{equation*}
+      \begin{split}
+        \lim_{n\to\infty} \frac{|2^{n+1}\sin{(\pi/2^{n+1})} - \pi|}{|2^{n}\sin{(\pi/2^{n})} - \pi|} & = \lim_{n\to\infty} \frac{\pi - 2^{n+1}\sin{(\pi/2^{n+1})}}{\pi - 2^{n}\sin{(\pi/2^{n})}} = \\
+         & = \lim_{n\to\infty} \frac{2^{n+1}}{2^{n}}\cdot\frac{\frac{\pi}{2^{n+1}} - \sin{(\pi/2^{n+1})}}{\frac{\pi}{2^{n}} - \sin{(\pi/2^{n})}} = 2 \lim_{n\to\infty} \frac{\frac{\pi}{2^{n+1}} - \sin{(\pi/2^{n+1})}}{\frac{\pi}{2^{n}} - \sin{(\pi/2^{n})}}
+      \end{split}
+    \end{equation*}
+    Połóżmy \(x:= \frac{\pi}{2^{n+1}} \stackrel{n\to\infty}{\to} 0\) i wykorzystajmy kilkukrotnie regułę de l'Hospitala (możemy, ponieważ w każdym kroku mamy wyrażenie nieoznaczone \(0/0\)).
+    \begin{equation*}
+      \begin{split}
+        \lim_{n\to\infty} \frac{|2^{n+1}\sin{(\pi/2^{n+1})} - \pi|}{|2^{n}\sin{(\pi/2^{n})} - \pi|} & = 2 \lim_{x\to0} \frac{x - \sin{x}}{2x - \sin{2x}} =
+         2 \lim_{x\to0} \frac{1 - \cos{x}}{2 - 2\cos{2x}} = \\ & =  2 \lim_{x\to0} \frac{\sin{x}}{4\sin{2x}}
+         = 2 \lim_{x\to0} \frac{\cos{x}}{8\cos{2x}} = 2\cdot \frac{1}{8} = \frac{1}{4}
+      \end{split}
+    \end{equation*}
+  \end{proof}
+\end{tw}
+  Twierdzenie 6 ostatecznie dowodzi, że formuły (1),(2) i (3) są zbieżne liniowo do \(\pi\).
+
+
+
+\section{Podsumowanie obliczeń.}
+
+\par Łatwo zauważyć, że wzór (1) jest bezużyteczny w kontekście obliczeń numerycznych. Dla odpowiednio dużego \(k\) nasze \( x_k \) nijak nie przypomina liczby \(\pi\) ze względu na utratę cyfr znaczących przy odejmowaniu bliskich sobie liczb.
+Proste przekształcenie pozwala nam wyprowadzić wzór (2), w którym nie doświadczamy utraty cyfr znaczących - propagowany błąd jest ograniczony i jest rzędu błędu reprezentacji, a obliczanie kolejnych wyrazów ciągu stabilizuje się, aczkolwiek wykonujemy dość dużo działań w każdej iteracji.
+\par Wzór (3) jest nieco lepszy od wzoru (2), a co za tym idzie jest najlepszym wzorem od strony numerycznej z tych tutaj rozpatrywanych - wykonujemy mało działań w każdej iteracji, a propagowany błąd jest rzędu błędu reprezentacji.
+Jedyna wada jaką można dostrzec, to taka, że naiwna rekurencyjna implementacja tego wzoru jest kosztowna od strony pamięciowej - mamy co najmniej dwa wywołania rekurencyjne w każdym kroku, więc czas wykonania funkcji jest \(O(2^n)\),
+aczkolwiek każdy student informatyki po Wstępie do Informatyki powinien poradzić sobie z implementacją tego wzoru działającą w czasie liniowym od ilości iteracji.
+Wszystkie te wzory są zbieżne liniowo do liczby \(\pi\), co nie jest najlepszym wynikiem.
+Zdecydowanie lepszy efekt dałoby wykorzystanie algorytmu Chudnovsky'ego czy sum wyprowadzonych przez Machina wykorzystujących funkcję \(\arctan(x)\).
+
+\begin{thebibliography}{9}
+\itemsep10pt
+\bibitem{JMJ} J. i M. Jankowscy, \emph{Przegląd metod i algorytmów numerycznych}, cz. 1, WNT, 1981.
+\bibitem{MS} Michelle Schatzman, \emph{Numerical analysis: a mathematical introduction}, Clarendon Press, Oxford, 2002
+\bibitem{CK} W. Cheney, D. Kincaid, \emph{Analiza numeryczna}, WNT, 2006.
+\bibitem{approx} \url{https://en.wikipedia.org/wiki/Approximations_of_pi} (Z dnia 10.11.2017).
+\bibitem{history} \url{https://en.wikipedia.org/wiki/Chronology_of_computation_of_pi} (Z dnia 10.11.2017).
+\end{thebibliography}
+\end{document}
