@@ -1,0 +1,16 @@
+NEW k = 10
+We i = 0, have 0.0466 and deck = 
+ [Card(figure='4', color='♦'), Card(figure='10', color='♣'), Card(figure='8', color='♥'), Card(figure='5', color='♠'), Card(figure='8', color='♦'), Card(figure='9', color='♣'), Card(figure='10', color='♥'), Card(figure='2', color='♠'), Card(figure='4', color='♥'), Card(figure='2', color='♣')]
+
+We i = 2, have 0.2286 and deck = 
+ [Card(figure='6', color='♥'), Card(figure='7', color='♥'), Card(figure='7', color='♣'), Card(figure='9', color='♥'), Card(figure='4', color='♥'), Card(figure='6', color='♣'), Card(figure='6', color='♦'), Card(figure='4', color='♦'), Card(figure='4', color='♣'), Card(figure='10', color='♥')]
+
+We i = 10, have 0.2312 and deck = 
+ [Card(figure='6', color='♠'), Card(figure='5', color='♠'), Card(figure='10', color='♥'), Card(figure='7', color='♥'), Card(figure='9', color='♦'), Card(figure='8', color='♥'), Card(figure='7', color='♣'), Card(figure='7', color='♠'), Card(figure='5', color='♣'), Card(figure='5', color='♥')]
+
+We i = 34, have 0.2332 and deck = 
+ [Card(figure='9', color='♦'), Card(figure='8', color='♦'), Card(figure='9', color='♠'), Card(figure='9', color='♥'), Card(figure='3', color='♠'), Card(figure='4', color='♥'), Card(figure='5', color='♣'), Card(figure='10', color='♠'), Card(figure='8', color='♥'), Card(figure='9', color='♣')]
+
+We i = 41, have 0.343 and deck = 
+ [Card(figure='8', color='♠'), Card(figure='8', color='♣'), Card(figure='8', color='♥'), Card(figure='4', color='♠'), Card(figure='4', color='♥'), Card(figure='6', color='♣'), Card(figure='5', color='♣'), Card(figure='4', color='♦'), Card(figure='4', color='♣'), Card(figure='3', color='♠')]
+
