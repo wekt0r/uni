@@ -1,0 +1,5 @@
+to jest tekst
+który ma parę linijek
+a tu się kończy
+STOP
+nowa linia dla sprawdzenia appendfile
