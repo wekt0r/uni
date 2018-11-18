@@ -1,0 +1,6 @@
+*.dat
+*.toc
+*.aux
+*.log
+*.swp
+*.pyc
