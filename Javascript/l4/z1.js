@@ -1,9 +1,7 @@
-function Tree(left, right, value) {
-	return {
-		left: left,
-		right: right,
-		value: value
-	}
+var Tree = function (left, right, value) {
+	this.left = left,
+	this.right = right,
+	this.value = value
 }
 
 //let's make tree  '+'
@@ -14,12 +12,12 @@ function Tree(left, right, value) {
 //		   /   \
 //		  3     4
 //
-_3 = Tree(null, null, 3)
-_4 = Tree(null, null, 4)
-_10 = Tree(null, null, 10)
-plus = Tree(_3, _4, '+')
-mult = Tree(plus, _10, '*')
-_2 = Tree(null, null, 2)
-rooot = Tree(_2, mult, '+')
+_3 = new Tree(null, null, 3)
+_4 = new Tree(null, null, 4)
+_10 = new Tree(null, null, 10)
+plus = new Tree(_3, _4, '+')
+mult = new Tree(plus, _10, '*')
+_2 = new Tree(null, null, 2)
+rooot = new Tree(_2, mult, '+')
 console.log(rooot)
 

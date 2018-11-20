@@ -1,11 +1,9 @@
-function Tree(left, right, value) {
-	return {
-		left: left,
-		right: right,
-		value: value
-	}
+var Tree = function (left, right, value) {
+	this.left = left,
+	this.right = right,
+	this.value = value
 }
-Object.prototype[Symbol.iterator] = function* (){
+Tree.prototype[Symbol.iterator] = function* (){
 	yield this.value
 	if (this.left != null){
 		yield* this.left
@@ -27,3 +25,4 @@ console.log(Object.getPrototypeOf(rooot))
 for (var e of rooot){
 	console.log(e)
 }
+
