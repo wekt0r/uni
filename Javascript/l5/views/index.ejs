@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wypełnij deklarację</title>
+</head>
+<style>
+    table {
+        border-collapse: collapse;
+	width: 1000px
+    }
+    input.number {
+        width: 50px;
+    }
+    tr,th, td{
+        border: 2px solid #444444;
+        text-align: left;
+        padding: 8px;
+    }
+</style>
+
+
+<body>
+    <form method="POST" >
+        <div>
+              <table border="1">
+              <tr>
+                <th>Przedmiot:</th>
+                <td>
+                    <input type='text' name='course' required/>
+                </td>
+                <th>Imię i nazwisko:</th>
+                <td>
+                    <input type='text' name='name' pattern="[A-Za-zęóąśłżźćńĘÓĄŚŁŻŹĆŃ ]*" required/>
+                </td>
+                <th>Data: </th>
+                <td>
+                    <input type='text' name='date'/>
+                </td>
+                <th>Suma: </th>
+                <td>
+                    <input type="number" name="sum" id="" min="0" class="number">
+                </td>
+
+              </tr>
+          </table>
+          <table>
+              <tr>
+                <th>
+                Zadanie:
+                </th>
+                <% for (var i = 1; i <= 10; i++) { %>
+                    <td>
+                        <%= i %>
+                    </td>
+                <% } %>
+              </tr>
+              <tr>
+                  <th>
+                  Punkty:
+                  </th>
+                  <% for (var i = 0; i < 10; i++) { %>
+                      <td>
+                          <input type="number" name=<%= `z[${i}]` %> id="" min="0" class="number">
+                      </td>
+                  <% } %>
+              </tr>
+            </table>
+        </div>
+        <br>
+        <div>
+            <button>Drukuj</button>
+        </div>
+    </form>
+</body>
+
+</html>

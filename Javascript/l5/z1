@@ -1,0 +1,4 @@
+przechwytywanie: zakładka Proxy/Intercept, "Intercept is on", wczytaj stronę - mamy wszystkie żądania i odpowiedzi strony, modyfikacja to zwykłe kliknięcie i pisanie 
+pułapki - intercept (server requests|client responses) dodaj regułę?
+
+repeater - proxy/intercept -> action -> send to repeater  
